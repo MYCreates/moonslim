@@ -15,6 +15,12 @@ public class PlayerControler : MonoBehaviour
     Animator _Anim { get; set; }
     Rigidbody _Rb { get; set; }
     Camera _MainCamera { get; set; }
+    bool _ArrierePlan { get; set; }
+    bool _AnimChangementPlan { get; set; }
+    bool _HasControl { get; set; }
+
+    Time _ChangementPlanStartTime;
+    Time _ChangementPlanTime;
 
     // Valeurs exposées
     [SerializeField]
@@ -25,6 +31,9 @@ public class PlayerControler : MonoBehaviour
 
     [SerializeField]
     LayerMask WhatIsGround;
+
+    [SerializeField]
+    float ChangementPlanDuration = 1.0f;
 
     // Awake se produit avait le Start. Il peut être bien de régler les références dans cette section.
     void Awake()
@@ -39,15 +48,29 @@ public class PlayerControler : MonoBehaviour
     {
         _Grounded = false;
         _Flipped = false;
+        _ArrierePlan = false;
+        _HasControl = true;
     }
 
     // Vérifie les entrées de commandes du joueur
     void Update()
     {
         var horizontal = Input.GetAxis("Horizontal") * MoveSpeed;
-        HorizontalMove(horizontal);
+        if (_HasControl)
+        {
+            if (_ArrierePlan)
+            {
+
+            }
+            else
+            {
+                HorizontalMove(horizontal);
+            }
+        } 
+
         FlipCharacter(horizontal);
         CheckJump();
+        CheckPlan();
     }
 
     // Gère le mouvement horizontal
@@ -69,6 +92,36 @@ public class PlayerControler : MonoBehaviour
                 _Anim.SetBool("Grounded", false);
                 _Anim.SetBool("Jump", true);
             }
+        }
+    }
+
+    void CheckPlan()
+    {
+        if (!_AnimChangementPlan)
+        {
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                if (_ArrierePlan)
+                {
+                    //_Rb.AddForce(new Vector3(0, 0, JumpForce / 5), ForceMode.Impulse);
+                    _Grounded = false;
+                    _Anim.SetBool("Grounded", false);
+                    _Anim.SetBool("Jump", true);
+                }
+                else
+                {
+                    //_Rb.AddForce(new Vector3(0, 0, JumpForce / 5), ForceMode.Impulse);
+                    _Grounded = false;
+
+                    _Anim.SetBool("Grounded", true);
+                    _Anim.SetBool("Jump", false);
+                }
+                _ArrierePlan = !_ArrierePlan;
+            }
+        } else
+        {
+            _Rb.velocity = new Vector3(0, 0, 0);
+            Time.deltaTime
         }
     }
 
