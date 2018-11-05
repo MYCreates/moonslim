@@ -54,6 +54,9 @@ public class PlayerController : MonoBehaviour
         _JumpBoost = 1.0f;
         _Background = false;
         _HasControl = true;
+
+        _Rb.freezeRotation = true;
+
     }
 
     // Vérifie les entrées de commandes du joueur
