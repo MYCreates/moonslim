@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
     bool _AnimBackgroundGoto { get; set; }
     bool _HasControl { get; set; }
     Vector3 PlayerInitialPosition;
-    
+
     float _BackgroundGotoTime;
 
     // Valeurs exposées
@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     float BackgroundGotoDuration = 1.0f;
     [SerializeField]
-    float BackgroundPlyerVelocity = 1.2f;
+    float BackgroundPlayerVelocity = 1.2f;
 
     // Awake se produit avait le Start. Il peut être bien de régler les références dans cette section.
     void Awake()
@@ -54,6 +54,9 @@ public class PlayerController : MonoBehaviour
         _JumpBoost = 1.0f;
         _Background = false;
         _HasControl = true;
+
+        _Rb.freezeRotation = true;
+
     }
 
     // Vérifie les entrées de commandes du joueur
@@ -79,6 +82,7 @@ public class PlayerController : MonoBehaviour
         CheckPlan();
         CheckGround();
         CheckGlide();
+        CheckOrientation();
     }
 
     private void CheckBoost()
@@ -115,7 +119,7 @@ public class PlayerController : MonoBehaviour
     }
     void BackgroundMove(float horizontal, float vertical)
     {
-        _Rb.velocity = new Vector3(_Rb.velocity.x, vertical * _SpeedBoost * BackgroundPlyerVelocity, horizontal * _SpeedBoost * BackgroundPlyerVelocity);
+        _Rb.velocity = new Vector3(_Rb.velocity.x, vertical * _SpeedBoost * BackgroundPlayerVelocity, horizontal * _SpeedBoost * BackgroundPlayerVelocity);
     }
 
     // Gère l'orientation du joueur
@@ -145,7 +149,7 @@ public class PlayerController : MonoBehaviour
         {
             if (Input.GetButtonDown("Jump"))
             {
-                _Rb.AddForce(new Vector3(0, JumpForce*_JumpBoost, 0), ForceMode.Impulse);
+                _Rb.AddForce(new Vector3(0, JumpForce * _JumpBoost, 0), ForceMode.Impulse);
                 _Grounded = false;
                 _Anim.SetBool("Grounded", false);
                 _Anim.SetBool("Jump", true);
@@ -178,25 +182,29 @@ public class PlayerController : MonoBehaviour
                 _HasControl = false;
                 PlayerInitialPosition = _Rb.position;
             }
-        } else
+        }
+        else
         {
             _Rb.velocity = new Vector3(0, 0, 0);
 
-            if( _BackgroundGotoTime > 0)
+            if (_BackgroundGotoTime > 0)
             {
                 float BackgroundDistance = 1.5f;
                 float elapsed = 1 - (_BackgroundGotoTime / BackgroundGotoDuration);
-                if(_Background) //Va vers l'arriere plan
+                if (_Background) //Va vers l'arriere plan
                 {
                     Vector3 goBackground = new Vector3(-BackgroundDistance, 0, 0);
                     _Rb.MovePosition(Vector3.Lerp(PlayerInitialPosition, PlayerInitialPosition + goBackground, elapsed));
-                } else //Va vers le premier plan
+                }
+                else //Va vers le premier plan
                 {
                     Vector3 goForeground = new Vector3(BackgroundDistance, 0, 0);
                     _Rb.MovePosition(Vector3.Lerp(PlayerInitialPosition, PlayerInitialPosition + goForeground, elapsed));
                 }
-                _BackgroundGotoTime -= Math.Max(Time.deltaTime, 0);
-            } else
+                _BackgroundGotoTime -= Time.deltaTime;
+                _BackgroundGotoTime = Math.Max(_BackgroundGotoTime, 0);
+            }
+            else
             {
                 _HasControl = true;
                 _AnimBackgroundGoto = false;
@@ -235,9 +243,19 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    //Force le personnage à être droit dans les air
+    void CheckOrientation()
+    {
+        if (!_Grounded || _Background)
+        {
+            _Rb.rotation = Quaternion.Euler(0, 90, 0);
+            _Rb.angularVelocity = new Vector3(0, 0, 0);
+        }
+    }
+
     // Collision avec le sol
     void OnCollisionEnter(Collision coll)
-    {        
+    {
         // On s'assure de bien être en contact avec le sol
         if ((WhatIsGround & (1 << coll.gameObject.layer)) == 0)
             return;
