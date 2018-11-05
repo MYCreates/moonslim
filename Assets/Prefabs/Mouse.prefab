@@ -18,10 +18,11 @@ GameObject:
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4315683515737280}
+  - component: {fileID: 224285889739317270}
   - component: {fileID: 212153990908065652}
   - component: {fileID: 65762178760426314}
   - component: {fileID: 54602132123855350}
+  - component: {fileID: 114789471057508272}
   m_Layer: 0
   m_Name: Mouse
   m_TagString: Untagged
@@ -29,19 +30,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4315683515737280
-Transform:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1051158257827220}
-  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0.5, y: -0.54999995, z: 3.29}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!54 &54602132123855350
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -69,6 +57,24 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.2700003, y: 2, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &114789471057508272
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1051158257827220}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95fc99265199d72469816d25671ea1a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ekto: {fileID: 0}
+  laser: {fileID: 0}
+  maxLookDistance: 10
+  maxAttackDistance: 5
+  miniDistanceEkto: 2
+  fireRate: 5
+  laserTime: 2
 --- !u!212 &212153990908065652
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -115,3 +121,21 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!224 &224285889739317270
+RectTransform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1051158257827220}
+  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 3.29}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -0.54999995}
+  m_SizeDelta: {x: 1.27, y: 1.97}
+  m_Pivot: {x: 0.5, y: 0.5}
