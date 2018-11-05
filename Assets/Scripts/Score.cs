@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 public class Score : MonoBehaviour {
 
+    [HideInInspector]
     public int ScoreVal = 0;
     Text scoreText;
 
