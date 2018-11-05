@@ -24,20 +24,21 @@ public class MouseController : MonoBehaviour
    void Start()
    {
         ekto = FindObjectOfType<PlayerController>().transform;
-        laser = transform.GetChild(0);
         _Rb = GetComponent<Rigidbody>();
-   }
+        if (hasLaser)
+            laser = transform.GetChild(0);
+
+    }
 
     void Update()
     {
-        if (hasLaser)
+        float distance = Vector3.Distance(ekto.position, transform.position);
+        Vector3 dir = ekto.position - transform.position;
+        if (distance <= maxLookDistance && dir.x == 0)
         {
-            float distance = Vector3.Distance(ekto.position, transform.position);
-            Vector3 dir = ekto.position - transform.position;
-            Debug.Log(dir);
-            if (distance <= maxLookDistance && dir.x == 0)
+            LookAtEkto();
+            if (hasLaser)
             {
-                LookAtEkto();
                 if ((Time.time - lastShotTime) > fireRate)
                 {
                     Shoot();
@@ -52,14 +53,19 @@ public class MouseController : MonoBehaviour
         if (dir.z > 0)
         {
             GetComponent<SpriteRenderer>().flipX = true;
-            float xT = -Mathf.Abs(laser.transform.localPosition.x);
-            laser.transform.localPosition = new Vector3(xT,laser.transform.localPosition.y, laser.transform.localPosition.z);
+            if (hasLaser)
+            {
+                float xT = -Mathf.Abs(laser.transform.localPosition.x);
+                laser.transform.localPosition = new Vector3(xT, laser.transform.localPosition.y, laser.transform.localPosition.z);
+            }
             return;
         }
         GetComponent<SpriteRenderer>().flipX = false;
-        float xF = Mathf.Abs(laser.transform.localPosition.x);
-        laser.transform.localPosition = new Vector3(xF, laser.transform.localPosition.y, laser.transform.localPosition.z);
-
+        if (hasLaser)
+        {
+            float xF = Mathf.Abs(laser.transform.localPosition.x);
+            laser.transform.localPosition = new Vector3(xF, laser.transform.localPosition.y, laser.transform.localPosition.z);
+        }
     }
 
 
@@ -75,6 +81,7 @@ public class MouseController : MonoBehaviour
         if (col.gameObject.tag == "Player")
         {
             _Rb.constraints = RigidbodyConstraints.FreezeAll;
+            // TO DO : GERER ICI L'ATTRAPAGE
         }
     }
 

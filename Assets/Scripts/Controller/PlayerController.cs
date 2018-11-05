@@ -27,23 +27,19 @@ public class PlayerController : MonoBehaviour
     // Valeurs exposées
     [SerializeField]
     float MoveSpeed = 3.0f;
-
     [SerializeField]
     float JumpForce = 5.0f;
-
     [SerializeField]
     LayerMask WhatIsGround;
     [SerializeField]
     LayerMask WhatIsWall;
     [SerializeField]
     LayerMask WhatIsMouse;
-
     [SerializeField]
     float BackgroundGotoDuration = 1.0f;
     [SerializeField]
     float BackgroundPlayerVelocity = 1.2f;
 
-    // Awake se produit avait le Start. Il peut être bien de régler les références dans cette section.
     void Awake()
     {
         _Anim = GetComponent<Animator>();
@@ -66,14 +62,13 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    // Vérifie les entrées de commandes du joueur
     void Update()
     {
         CheckBoost();
-        var horizontal = Input.GetAxis("Horizontal") * MoveSpeed;
-        var vertical = Input.GetAxis("Vertical") * MoveSpeed;
         if (_HasControl)
         {
+            float horizontal = Input.GetAxis("Horizontal") * MoveSpeed;
+            float vertical = Input.GetAxis("Vertical") * MoveSpeed;
             if (_Background)
             {
                 BackgroundMove(horizontal, vertical);
@@ -83,7 +78,6 @@ public class PlayerController : MonoBehaviour
                 HorizontalMove(horizontal);
                 CheckJump();
             }
-
             FlipCharacter(horizontal);
         }
         CheckMouseGrabbed();
@@ -92,6 +86,7 @@ public class PlayerController : MonoBehaviour
         CheckOrientation();
     }
 
+    // Vérifie que le Boost de Vitesse n'est pas terminé
     private void CheckBoost()
     {
         if (_SpeedBoost == 1) return;
@@ -124,6 +119,8 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
+    // Gère le mouvement dans le fond
     void BackgroundMove(float horizontal, float vertical)
     {
         _Rb.velocity = new Vector3(_Rb.velocity.x, vertical * _SpeedBoost * BackgroundPlayerVelocity, horizontal * _SpeedBoost * BackgroundPlayerVelocity);
@@ -158,6 +155,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // Vérifie dans quel plan le personnage se situe
     void CheckPlan()
     {
         if (!_AnimBackgroundGoto)
@@ -209,7 +207,7 @@ public class PlayerController : MonoBehaviour
             {
                 _HasControl = true;
                 _AnimBackgroundGoto = false;
-                _Grounded = true;//hum
+                _Grounded = true;//hum?
                 _BackgroundGotoTime = 0;
             }
         }
@@ -220,30 +218,38 @@ public class PlayerController : MonoBehaviour
     {
         if (_Background) return;
 
-        RaycastHit hit;
+        if (_Grounded)
+        {
+            _Anim.SetBool("OnWall", false);
+            return;
+        }
 
+        RaycastHit hit;
         Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.left) * 1.0f, Color.green);
 
+        // TO DO : ne fonctionne pas (pas de Debug lancé)
         Ray ray = new Ray(transform.position, transform.TransformDirection(Vector3.left));
         if (Physics.Raycast(ray, out hit, 1.0f, WhatIsWall) && Input.GetKey("left"))
         {
             _Rb.velocity = new Vector3(_Rb.velocity.x, Math.Max(_Rb.velocity.y, -1), _Rb.velocity.z);
-            //Debug.Log("Did hit left : " + hit.collider.gameObject.layer);
+            Debug.Log("Did hit left : " + hit.collider.gameObject.layer);
             Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.left) * 1.0f, Color.green);
-        }
-        else
-        {
-            ray = new Ray(transform.position, transform.TransformDirection(Vector3.right));
-            if (Physics.Raycast(ray, out hit, 1.0f, WhatIsWall) && Input.GetKey("right"))
-            {
-                _Rb.velocity = new Vector3(_Rb.velocity.x, Math.Max(_Rb.velocity.y, -1), _Rb.velocity.z);
-                //Debug.Log("Did hit right : " + hit.collider.gameObject.layer);
-                Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.right) * hit.distance, Color.green);
-            }
+            _Anim.SetBool("OnWall", true);
+            return;
         }
 
+        ray = new Ray(transform.position, transform.TransformDirection(Vector3.right));
+        if (Physics.Raycast(ray, out hit, 1.0f, WhatIsWall) && Input.GetKey("right"))
+        {
+            _Rb.velocity = new Vector3(_Rb.velocity.x, Math.Max(_Rb.velocity.y, -1), _Rb.velocity.z);
+            Debug.Log("Did hit right : " + hit.collider.gameObject.layer);
+            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.right) * hit.distance, Color.green);
+            _Anim.SetBool("OnWall", true);
+            return;
+        }
     }
 
+    // TO DO : Je pense qu'il vaut mieux gérer une bonne partie dans MouseController::OnCollisionEnter()
     void CheckMouseGrabbed()
     {
         if (_MouseIFrame > 0)
@@ -276,6 +282,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // Vérifie qu'en l'air le personnage ne vrille pas
     void CheckOrientation()
     {
         if (!_Grounded || _Background)
@@ -333,14 +340,14 @@ public class PlayerController : MonoBehaviour
 
     public void EatCheese(float speed, float time)
     {
-        //Anim
+        // TODO : Anim
         _SpeedBoost = speed;
         _BoostTimer += time;
     }
 
     public void UseStar(Star star)
     {
-        //Anim
+        // TODO : Anim
         switch (star.TypeBoost)
         {
             case AgiltyBoost.HigherJump:
@@ -356,8 +363,8 @@ public class PlayerController : MonoBehaviour
 
     public void Kill()
     {
-        //Anim
-        //Text Canvas
+        // TODO : Anim
+        // TODO : Text Canvas
         _HasControl = false;
 
     }
