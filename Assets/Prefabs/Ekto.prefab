@@ -108,7 +108,8 @@ MonoBehaviour:
   WhatIsWall:
     serializedVersion: 2
     m_Bits: 0
-  ChangementPlanDuration: 0.25
+  BackgroundGotoDuration: 1
+  BackgroundPlyerVelocity: 1.2
 --- !u!212 &212785683657155354
 SpriteRenderer:
   m_ObjectHideFlags: 1
