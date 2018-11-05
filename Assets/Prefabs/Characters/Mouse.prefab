@@ -68,13 +68,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95fc99265199d72469816d25671ea1a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ekto: {fileID: 0}
-  laser: {fileID: 0}
+  hasLaser: 0
+  laserPrefab: {fileID: 0}
   maxLookDistance: 10
-  maxAttackDistance: 5
   miniDistanceEkto: 2
   fireRate: 5
-  laserTime: 2
 --- !u!212 &212153990908065652
 SpriteRenderer:
   m_ObjectHideFlags: 1
