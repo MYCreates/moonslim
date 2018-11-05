@@ -37,8 +37,8 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1243443264032632}
-  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -0, y: 0, z: 2.95}
+  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0.001208663, y: -0.36225104, z: -1.6484139}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -107,9 +107,9 @@ MonoBehaviour:
     m_Bits: 256
   WhatIsWall:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 512
   BackgroundGotoDuration: 1
-  BackgroundPlyerVelocity: 1.2
+  BackgroundPlayerVelocity: 1.2
 --- !u!212 &212785683657155354
 SpriteRenderer:
   m_ObjectHideFlags: 1

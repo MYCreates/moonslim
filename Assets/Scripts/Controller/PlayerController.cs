@@ -248,7 +248,7 @@ public class PlayerController : MonoBehaviour
     {
         if (!_Grounded || _Background)
         {
-            _Rb.rotation = Quaternion.Euler(0, 90, 0);
+            _Rb.rotation = Quaternion.Euler(0, -90, 0);
             _Rb.angularVelocity = new Vector3(0, 0, 0);
         }
     }
