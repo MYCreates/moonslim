@@ -58,7 +58,7 @@ public class PlayerController : MonoBehaviour
         _Background = false;
         _HasControl = true;
 
-        _Rb.freezeRotation = true;
+        //_Rb.freezeRotation = true;
 
     }
 
