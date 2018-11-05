@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     float BackgroundGotoDuration = 1.0f;
     [SerializeField]
-    float BackgroundPlyerVelocity = 1.2f;
+    float BackgroundPlayerVelocity = 1.2f;
 
     // Awake se produit avait le Start. Il peut être bien de régler les références dans cette section.
     void Awake()
@@ -79,6 +79,7 @@ public class PlayerController : MonoBehaviour
         CheckPlan();
         CheckGround();
         CheckGlide();
+        CheckOrientation();
     }
 
     private void CheckBoost()
@@ -115,7 +116,7 @@ public class PlayerController : MonoBehaviour
     }
     void BackgroundMove(float horizontal, float vertical)
     {
-        _Rb.velocity = new Vector3(_Rb.velocity.x, vertical * _SpeedBoost * BackgroundPlyerVelocity, horizontal * _SpeedBoost * BackgroundPlyerVelocity);
+        _Rb.velocity = new Vector3(_Rb.velocity.x, vertical * _SpeedBoost * BackgroundPlayerVelocity, horizontal * _SpeedBoost * BackgroundPlayerVelocity);
     }
 
     // Gère l'orientation du joueur
@@ -195,7 +196,8 @@ public class PlayerController : MonoBehaviour
                     Vector3 goForeground = new Vector3(BackgroundDistance, 0, 0);
                     _Rb.MovePosition(Vector3.Lerp(PlayerInitialPosition, PlayerInitialPosition + goForeground, elapsed));
                 }
-                _BackgroundGotoTime -= Math.Max(Time.deltaTime, 0);
+                _BackgroundGotoTime -= Time.deltaTime;
+                _BackgroundGotoTime = Math.Max(_BackgroundGotoTime, 0);
             } else
             {
                 _HasControl = true;
@@ -233,6 +235,16 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+    }
+
+    //Force le personnage à être droit dans les air
+    void CheckOrientation()
+    {
+        if(!_Grounded || _Background)
+        {
+            _Rb.rotation = Quaternion.Euler(0, 90, 0);
+            _Rb.angularVelocity = new Vector3(0, 0, 0);
+        }
     }
 
     // Collision avec le sol
