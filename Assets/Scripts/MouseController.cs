@@ -4,6 +4,8 @@ public class MouseController : MonoBehaviour
 {
     private Transform ekto;
     [SerializeField]
+    public bool hasLaser;
+    [SerializeField]
     public Transform laserPrefab;
     private Transform laser;
 
@@ -26,21 +28,25 @@ public class MouseController : MonoBehaviour
 
     void Update()
     {
-        float distance = Vector3.Distance(ekto.position, transform.position);
-        if (distance <= maxLookDistance)
+        if (hasLaser)
         {
-            LookAtEkto();
-            //Check distance and time
-            if ((Time.time - lastShotTime) > fireRate)
+            float distance = Vector3.Distance(ekto.position, transform.position);
+            Vector3 dir = ekto.position - transform.position;
+            Debug.Log(dir);
+            if (distance <= maxLookDistance && dir.x == 0)
             {
-                Shoot();
+                LookAtEkto();
+                if ((Time.time - lastShotTime) > fireRate)
+                {
+                    Shoot();
+                }
             }
-        }
+        }  
     }
 
     void LookAtEkto()
     {
-        var dir = ekto.position - transform.position;
+        Vector3 dir = ekto.position - transform.position;
         if (dir.z > 0)
         {
             GetComponent<SpriteRenderer>().flipX = true;
