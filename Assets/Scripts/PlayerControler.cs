@@ -159,16 +159,14 @@ public class PlayerControler : MonoBehaviour
                 {
                     _ChangementPlanTime = ChangementPlanDuration;
                     _Grounded = false;
-                    _Anim.SetBool("Grounded", true);
-                    _Anim.SetBool("Jump", false);
+                    _Anim.SetBool("Back", false);
                     _Rb.useGravity = true;
                 }
                 else //on passe à l'arriere plan
                 {
                     _ChangementPlanTime = ChangementPlanDuration;
                     _Grounded = false;
-                    _Anim.SetBool("Grounded", true);
-                    _Anim.SetBool("Jump", false);
+                    _Anim.SetBool("Back", true);
                     _Rb.useGravity = false;
                 }
                 _ArrierePlan = !_ArrierePlan;
