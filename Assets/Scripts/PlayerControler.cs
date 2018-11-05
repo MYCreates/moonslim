@@ -66,12 +66,13 @@ public class PlayerControler : MonoBehaviour
             {
                 HorizontalMove(horizontal);
             }
-        } 
 
-        FlipCharacter(horizontal);
-        CheckGround();
-        CheckJump();
+            FlipCharacter(horizontal);
+            CheckJump();
+        }
+
         CheckPlan();
+        CheckGround();
     }
 
     private void CheckBoost()
@@ -134,9 +135,9 @@ public class PlayerControler : MonoBehaviour
     {
         if (!_AnimChangementPlan)
         {
-            if (Input.GetKeyDown(KeyCode.E) && _ChangementPlanTime <= 0)
+            if (Input.GetKeyDown(KeyCode.E) && _ChangementPlanTime <= 0 && _HasControl)
             {
-                if (_ArrierePlan)
+                if (_ArrierePlan) //On passe au premier plan
                 {
                     _ChangementPlanTime = ChangementPlanDuration;
                     _Grounded = false;
@@ -144,7 +145,7 @@ public class PlayerControler : MonoBehaviour
                     _Anim.SetBool("Jump", false);
                     _Rb.useGravity = true;
                 }
-                else
+                else //on passe à l'arriere plan
                 {
                     _ChangementPlanTime = ChangementPlanDuration;
                     _Grounded = false;
@@ -175,6 +176,7 @@ public class PlayerControler : MonoBehaviour
             {
                 _HasControl = true;
                 _AnimChangementPlan = false;
+                _Grounded = true;//hum
                 _ChangementPlanTime = 0;
             }
         }
