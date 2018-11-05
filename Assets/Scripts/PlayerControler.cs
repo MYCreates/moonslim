@@ -12,11 +12,12 @@ public class PlayerControler : MonoBehaviour
     Animator _Anim { get; set; }
     Rigidbody _Rb { get; set; }
     Collider _Collider { get; set; }
-    bool _ArrierePlan { get; set; }
-    bool _AnimChangementPlan { get; set; }
+    bool _Background { get; set; }
+    bool _AnimBackgroundGoto { get; set; }
     bool _HasControl { get; set; }
+    Vector3 PlayerInitialPosition;
     
-    float _ChangementPlanTime;
+    float _BackgroundGotoTime;
 
     // Valeurs exposées
     [SerializeField]
@@ -31,7 +32,9 @@ public class PlayerControler : MonoBehaviour
     LayerMask WhatIsWall;
 
     [SerializeField]
-    float ChangementPlanDuration = 1.0f;
+    float BackgroundGotoDuration = 1.0f;
+    [SerializeField]
+    float BackgroundPlyerVelocity = 1.2f;
 
     // Awake se produit avait le Start. Il peut être bien de régler les références dans cette section.
     void Awake()
@@ -49,7 +52,7 @@ public class PlayerControler : MonoBehaviour
         _SpeedBoost = 1.0f;
         _BoostTimer = 0.0f;
         _JumpBoost = 1.0f;
-        _ArrierePlan = false;
+        _Background = false;
         _HasControl = true;
     }
 
@@ -61,19 +64,18 @@ public class PlayerControler : MonoBehaviour
         var vertical = Input.GetAxis("Vertical") * MoveSpeed;
         if (_HasControl)
         {
-            if (_ArrierePlan)
+            if (_Background)
             {
-                CheeseMove(horizontal, vertical);
+                BackgroundMove(horizontal, vertical);
             }
             else
             {
                 HorizontalMove(horizontal);
+                CheckJump();
             }
 
             FlipCharacter(horizontal);
-            CheckJump();
         }
-
         CheckPlan();
         CheckGround();
         CheckGlide();
@@ -109,9 +111,9 @@ public class PlayerControler : MonoBehaviour
             }
         }
     }
-    void CheeseMove(float horizontal, float vertical)
+    void BackgroundMove(float horizontal, float vertical)
     {
-        _Rb.velocity = new Vector3(_Rb.velocity.x, vertical * _SpeedBoost, horizontal * _SpeedBoost);
+        _Rb.velocity = new Vector3(_Rb.velocity.x, vertical * _SpeedBoost * BackgroundPlyerVelocity, horizontal * _SpeedBoost * BackgroundPlyerVelocity);
     }
 
     // Gère l'orientation du joueur
@@ -151,49 +153,53 @@ public class PlayerControler : MonoBehaviour
 
     void CheckPlan()
     {
-        if (!_AnimChangementPlan)
+        if (!_AnimBackgroundGoto)
         {
-            if (Input.GetKeyDown(KeyCode.E) && _ChangementPlanTime <= 0 && _HasControl)
+            if (Input.GetKeyDown(KeyCode.E) && _BackgroundGotoTime <= 0 && _HasControl)
             {
-                if (_ArrierePlan) //On passe au premier plan
+                if (_Background) //On passe au premier plan
                 {
-                    _ChangementPlanTime = ChangementPlanDuration;
                     _Grounded = false;
                     _Anim.SetBool("Back", false);
                     _Rb.useGravity = true;
                 }
                 else //on passe à l'arriere plan
                 {
-                    _ChangementPlanTime = ChangementPlanDuration;
                     _Grounded = false;
                     _Anim.SetBool("Back", true);
                     _Rb.useGravity = false;
                 }
-                _ArrierePlan = !_ArrierePlan;
-                _AnimChangementPlan = true;
+
+                _BackgroundGotoTime = BackgroundGotoDuration;
+                _Background = !_Background;
+                _AnimBackgroundGoto = true;
                 _HasControl = false;
+                PlayerInitialPosition = _Rb.position;
             }
         } else
         {
             _Rb.velocity = new Vector3(0, 0, 0);
 
-            if( _ChangementPlanTime > 0)
+            if( _BackgroundGotoTime > 0)
             {
-                float arrierePlanDistance = 1.5f;
-                if(_ArrierePlan) //Va vers l'arriere plan
+                float BackgroundDistance = 1.5f;
+                float elapsed = 1 - (_BackgroundGotoTime / BackgroundGotoDuration);
+                if(_Background) //Va vers l'arriere plan
                 {
-                    _Rb.MovePosition(_Rb.position + new Vector3(-arrierePlanDistance * Time.deltaTime, 0, 0));
+                    Vector3 goBackground = new Vector3(-BackgroundDistance, 0, 0);
+                    _Rb.MovePosition(Vector3.Lerp(PlayerInitialPosition, PlayerInitialPosition + goBackground, elapsed));
                 } else //Va vers le premier plan
                 {
-                    _Rb.MovePosition(_Rb.position + new Vector3(arrierePlanDistance * Time.deltaTime, 0, 0));
+                    Vector3 goForeground = new Vector3(BackgroundDistance, 0, 0);
+                    _Rb.MovePosition(Vector3.Lerp(PlayerInitialPosition, PlayerInitialPosition + goForeground, elapsed));
                 }
-                _ChangementPlanTime -= Time.deltaTime;
+                _BackgroundGotoTime -= Math.Max(Time.deltaTime, 0);
             } else
             {
                 _HasControl = true;
-                _AnimChangementPlan = false;
+                _AnimBackgroundGoto = false;
                 _Grounded = true;//hum
-                _ChangementPlanTime = 0;
+                _BackgroundGotoTime = 0;
             }
         }
     }
@@ -201,7 +207,7 @@ public class PlayerControler : MonoBehaviour
     // Gere la glissade sur les murs
     void CheckGlide()
     {
-        if (_ArrierePlan) return;
+        if (_Background) return;
 
         RaycastHit hit;
 
