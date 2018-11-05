@@ -16,6 +16,8 @@ public class MouseController : MonoBehaviour
     [SerializeField]
     public float fireRate = 5.0f;
     private float lastShotTime = 0.0f;
+    [SerializeField]
+    public float GrabDuration = 0.5f;
 
     private Rigidbody _Rb;
 

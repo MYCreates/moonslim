@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿﻿using UnityEngine;
 using System;
 
 public class PlayerController : MonoBehaviour
@@ -14,6 +14,11 @@ public class PlayerController : MonoBehaviour
     Collider _Collider { get; set; }
     bool _Background { get; set; }
     bool _AnimBackgroundGoto { get; set; }
+    bool _MouseGrabbed { get; set; }
+    float _MouseGrabbedDuration { get; set; }
+    float _MouseIFrame { get; set; }
+    Vector3 _MouseThrownDirection { get; set; }
+    Vector3 _MouseGrabberCenter { get; set; }
     bool _HasControl { get; set; }
     Vector3 PlayerInitialPosition;
 
@@ -30,6 +35,8 @@ public class PlayerController : MonoBehaviour
     LayerMask WhatIsGround;
     [SerializeField]
     LayerMask WhatIsWall;
+    [SerializeField]
+    LayerMask WhatIsMouse;
 
     [SerializeField]
     float BackgroundGotoDuration = 1.0f;
@@ -79,8 +86,8 @@ public class PlayerController : MonoBehaviour
 
             FlipCharacter(horizontal);
         }
+        CheckMouseGrabbed();
         CheckPlan();
-        CheckGround();
         CheckGlide();
         CheckOrientation();
     }
@@ -134,12 +141,6 @@ public class PlayerController : MonoBehaviour
             _Flipped = false;
         }
         GetComponent<SpriteRenderer>().flipX = _Flipped;
-    }
-
-    private void CheckGround()
-    {
-        _Grounded = Physics.Raycast(transform.position, -Vector3.up, _Collider.bounds.extents.y + 0.1f);
-        _Anim.SetBool("Grounded", _Grounded);
     }
 
     // Gère le saut du personnage, ainsi que son animation de saut
@@ -243,29 +244,90 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    //Force le personnage à être droit dans les air
+    void CheckMouseGrabbed()
+    {
+        if (_MouseIFrame > 0)
+        {
+            _MouseIFrame -= Time.deltaTime;
+            if (_MouseIFrame <= 0)
+            {
+                // TODO : pour bien faire, prendre le collider DE LA SOURIS plutot que celui d'Ekto --> pas d'embrouille dans les iframes
+                _Collider.enabled = true;
+            }
+        }
+
+        if (_MouseGrabbed)
+        {
+            if (_MouseGrabbedDuration > 0)
+            {
+                _MouseGrabbedDuration -= Time.deltaTime;
+                _Rb.velocity = _MouseGrabberCenter - _Rb.position;
+            }
+            else
+            {
+                // Lancer Ekto
+                _MouseGrabbed = false;
+                _HasControl = true;
+                _Rb.useGravity = true;
+                _Rb.velocity = _MouseThrownDirection * 5f;
+                _MouseIFrame = 1;
+            }
+
+        }
+    }
+
     void CheckOrientation()
     {
         if (!_Grounded || _Background)
         {
             _Rb.rotation = Quaternion.Euler(0, -90, 0);
             _Rb.angularVelocity = new Vector3(0, 0, 0);
+
         }
     }
 
     // Collision avec le sol
     void OnCollisionEnter(Collision coll)
     {
-        // On s'assure de bien être en contact avec le sol
-        if ((WhatIsGround & (1 << coll.gameObject.layer)) == 0)
-            return;
-
-        // Évite une collision avec le plafond
-        if (coll.relativeVelocity.y > 0)
+        // Collision avec un sol
+        if ((WhatIsGround & (1 << coll.gameObject.layer)) != 0)
         {
-            _Grounded = true;
-            _Anim.SetBool("Jump", false);
-            _Anim.SetBool("Grounded", _Grounded);
+            // Évite une collision avec le plafond
+            if (coll.contacts[0].normal == transform.up)
+            {
+                _Grounded = true;
+                _Anim.SetBool("Jump", false);
+                _Anim.SetBool("Grounded", _Grounded);
+            }
+        }
+
+        // Mouse grabbed
+        if ((WhatIsMouse & (1 << coll.gameObject.layer)) != 0 && _MouseIFrame <= 0)
+        {
+            // Collider & model
+            _Collider.enabled = false;
+            _Rb.useGravity = false;
+
+            // Variables
+            _MouseGrabbed = true;
+            _Grounded = false;
+            _MouseGrabberCenter = coll.gameObject.transform.position;
+            _Rb.velocity = _MouseGrabberCenter - _Rb.position;
+            _HasControl = false;
+            _MouseGrabbedDuration = coll.gameObject.GetComponent<MouseController>().GrabDuration;
+            Vector3 contact = coll.contacts[0].normal;
+            _MouseThrownDirection = new Vector3(contact.x, contact.y + 1f, contact.z);
+        }
+    }
+
+    // Collision avec le sol
+    void OnCollisionExit(Collision coll)
+    {
+        // On s'assure de bien être en contact avec le sol
+        if ((WhatIsGround & (1 << coll.gameObject.layer)) != 0)
+        {
+            _Grounded = false;
+            _Anim.SetBool("Grounded", false);
         }
     }
 
