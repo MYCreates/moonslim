@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System;
 
-public class PlayerControler : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     // Déclaration des variables
     bool _Grounded { get; set; }
@@ -95,6 +95,8 @@ public class PlayerControler : MonoBehaviour
     {
         if (_Grounded)
         {
+            //float h = horizontal * Time.deltaTime * MoveSpeed;
+            //transform.Translate(h, 0, 0);
             _Rb.velocity = new Vector3(_Rb.velocity.x, _Rb.velocity.y, horizontal * _SpeedBoost);
         }
         else

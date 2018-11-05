@@ -21,7 +21,7 @@ public class MouseController : MonoBehaviour
 
    void Start()
    {
-        ekto = GameObject.FindGameObjectWithTag("Player").transform;
+        ekto = FindObjectOfType<PlayerController>().transform;
         laser = transform.GetChild(0);
         _Rb = GetComponent<Rigidbody>();
    }

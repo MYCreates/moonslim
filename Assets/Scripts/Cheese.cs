@@ -16,7 +16,7 @@ public class Cheese : MonoBehaviour {
     private void OnTriggerEnter(Collider col)
     {
         if (col.tag != "Player") return;
-        col.GetComponent<PlayerControler>().EatCheese(speedBoost, boostTime);
+        col.GetComponent<PlayerController>().EatCheese(speedBoost, boostTime);
         Destroy(gameObject);
     }
 }

@@ -27,7 +27,7 @@ public class Star : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag != "Player") return;
-        other.GetComponent<PlayerControler>().UseStar(this);
+        other.GetComponent<PlayerController>().UseStar(this);
         gameObject.SetActive(false);
     }
 }

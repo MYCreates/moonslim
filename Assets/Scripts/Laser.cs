@@ -13,7 +13,7 @@ public class Laser : MonoBehaviour
 
     void Start()
     {
-        ekto = GameObject.FindGameObjectWithTag("Player").transform;
+        ekto = FindObjectOfType<PlayerController>().transform;
         laser = GetComponent<LineRenderer>();
         laser.material.color = Color.red;
         beginTime = Time.time;
@@ -33,7 +33,7 @@ public class Laser : MonoBehaviour
         {
             if (hit.collider.tag == "Destroyable") Destroy(hit.collider.gameObject);
 
-            if (hit.collider.tag == "Player") hit.collider.gameObject.GetComponent<PlayerControler>().Kill();
+            if (hit.collider.tag == "Player") hit.collider.gameObject.GetComponent<PlayerController>().Kill();
 
             if (hit.collider)
             {
