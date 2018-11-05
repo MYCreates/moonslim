@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 
 public class PlayerControler : MonoBehaviour
 {
@@ -26,6 +27,8 @@ public class PlayerControler : MonoBehaviour
 
     [SerializeField]
     LayerMask WhatIsGround;
+    [SerializeField]
+    LayerMask WhatIsWall;
 
     [SerializeField]
     float ChangementPlanDuration = 1.0f;
@@ -73,6 +76,7 @@ public class PlayerControler : MonoBehaviour
 
         CheckPlan();
         CheckGround();
+        CheckGlide();
     }
 
     private void CheckBoost()
@@ -89,7 +93,21 @@ public class PlayerControler : MonoBehaviour
     // Gère le mouvement horizontal
     void HorizontalMove(float horizontal)
     {
-        _Rb.velocity = new Vector3(_Rb.velocity.x, _Rb.velocity.y, horizontal*_SpeedBoost);
+        if (_Grounded)
+        {
+            _Rb.velocity = new Vector3(_Rb.velocity.x, _Rb.velocity.y, horizontal * _SpeedBoost);
+        }
+        else
+        {
+            if (horizontal < 0)
+            {
+                _Rb.velocity = new Vector3(_Rb.velocity.x, _Rb.velocity.y, Math.Max(horizontal * _SpeedBoost, _Rb.velocity.z + horizontal * _SpeedBoost / 20));
+            }
+            else if (horizontal > 0)
+            {
+                _Rb.velocity = new Vector3(_Rb.velocity.x, _Rb.velocity.y, Math.Min(horizontal * _SpeedBoost, _Rb.velocity.z + horizontal * _SpeedBoost / 20));
+            }
+        }
     }
     void CheeseMove(float horizontal, float vertical)
     {
@@ -180,6 +198,35 @@ public class PlayerControler : MonoBehaviour
                 _ChangementPlanTime = 0;
             }
         }
+    }
+
+    // Gere la glissade sur les murs
+    void CheckGlide()
+    {
+        if (_ArrierePlan) return;
+
+        RaycastHit hit;
+
+        Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.left) * 1.0f, Color.green);
+
+        Ray ray = new Ray(transform.position, transform.TransformDirection(Vector3.left));
+        if (Physics.Raycast(ray, out hit, 1.0f, WhatIsWall) && Input.GetKey("left"))
+        {
+            _Rb.velocity = new Vector3(_Rb.velocity.x, Math.Max(_Rb.velocity.y, -1), _Rb.velocity.z);
+            //Debug.Log("Did hit left : " + hit.collider.gameObject.layer);
+            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.left) * 1.0f, Color.green);
+        }
+        else
+        {
+            ray = new Ray(transform.position, transform.TransformDirection(Vector3.right));
+            if (Physics.Raycast(ray, out hit, 1.0f, WhatIsWall) && Input.GetKey("right"))
+            {
+                _Rb.velocity = new Vector3(_Rb.velocity.x, Math.Max(_Rb.velocity.y, -1), _Rb.velocity.z);
+                //Debug.Log("Did hit right : " + hit.collider.gameObject.layer);
+                Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.right) * hit.distance, Color.green);
+            }
+        }
+
     }
 
     // Collision avec le sol
