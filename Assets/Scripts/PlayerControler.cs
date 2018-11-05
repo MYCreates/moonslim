@@ -118,7 +118,7 @@ public class PlayerControler : MonoBehaviour
     // Gère le saut du personnage, ainsi que son animation de saut
     void CheckJump()
     {
-        if (_Grounded)
+        if (_Grounded && _HasControl)
         {
             if (Input.GetButtonDown("Jump"))
             {
@@ -217,5 +217,13 @@ public class PlayerControler : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    public void Kill()
+    {
+        //Anim
+        //Text Canvas
+        _HasControl = false;
+
     }
 }

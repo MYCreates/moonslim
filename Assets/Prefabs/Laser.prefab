@@ -65,8 +65,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ebff6670cd44be4099927a7d76de560, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RangeLaser: 25
-  LaserTime: 2
+  RangeLaser: 15
+  LaserTime: 1
 --- !u!120 &120214508883992850
 LineRenderer:
   m_ObjectHideFlags: 1

@@ -8,7 +8,7 @@ public class Laser : MonoBehaviour
     [SerializeField]
     public float RangeLaser = 25.0f;
     [SerializeField]
-    public float LaserTime = 2.0f;
+    public float LaserTime = 1.0f;
     private float beginTime = 0.0f;
 
     void Start()
@@ -31,6 +31,10 @@ public class Laser : MonoBehaviour
         laser.SetPosition(0, ray.origin);
         if (Physics.Raycast(ray, out hit, RangeLaser))
         {
+            if (hit.collider.tag == "Destroyable") Destroy(hit.collider.gameObject);
+
+            if (hit.collider.tag == "Player") hit.collider.gameObject.GetComponent<PlayerControler>().Kill();
+
             if (hit.collider)
             {
                 laser.SetPosition(1, hit.point);
