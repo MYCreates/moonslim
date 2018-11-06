@@ -109,13 +109,17 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+            
             if (horizontal < 0)
             {
-                _Rb.velocity = new Vector3(_Rb.velocity.x, _Rb.velocity.y, Math.Max(horizontal * _SpeedBoost, _Rb.velocity.z + horizontal * _SpeedBoost / 20));
+                _Rb.velocity = new Vector3(_Rb.velocity.x, _Rb.velocity.y, Math.Max(-3 * _SpeedBoost, _Rb.velocity.z + horizontal * _SpeedBoost / 5));
             }
             else if (horizontal > 0)
             {
-                _Rb.velocity = new Vector3(_Rb.velocity.x, _Rb.velocity.y, Math.Min(horizontal * _SpeedBoost, _Rb.velocity.z + horizontal * _SpeedBoost / 20));
+                _Rb.velocity = new Vector3(_Rb.velocity.x, _Rb.velocity.y, Math.Min(3 * _SpeedBoost, _Rb.velocity.z + horizontal * _SpeedBoost / 5));
+            } else
+            {
+                _Rb.velocity = new Vector3(_Rb.velocity.x, _Rb.velocity.y, Math.Min(3 * _SpeedBoost, Math.Max(_Rb.velocity.z, -3 * _SpeedBoost)));
             }
         }
     }
@@ -217,7 +221,6 @@ public class PlayerController : MonoBehaviour
     void CheckGlide()
     {
         if (_Background) return;
-
         if (_Grounded)
         {
             _Anim.SetBool("OnWall", false);
@@ -225,28 +228,24 @@ public class PlayerController : MonoBehaviour
         }
 
         RaycastHit hit;
-        Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.left) * 1.0f, Color.green);
 
-        // TO DO : ne fonctionne pas (pas de Debug lancé)
-        Ray ray = new Ray(transform.position, transform.TransformDirection(Vector3.left));
+        Ray ray = new Ray(transform.position, Vector3.back);
         if (Physics.Raycast(ray, out hit, 1.0f, WhatIsWall) && Input.GetKey("left"))
         {
-            _Rb.velocity = new Vector3(_Rb.velocity.x, Math.Max(_Rb.velocity.y, -1), _Rb.velocity.z);
-            Debug.Log("Did hit left : " + hit.collider.gameObject.layer);
-            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.left) * 1.0f, Color.green);
+            _Rb.velocity = new Vector3(_Rb.velocity.x, Math.Max(_Rb.velocity.y, -3), _Rb.velocity.z);
             _Anim.SetBool("OnWall", true);
             return;
         }
 
-        ray = new Ray(transform.position, transform.TransformDirection(Vector3.right));
+        ray = new Ray(transform.position, Vector3.forward);
         if (Physics.Raycast(ray, out hit, 1.0f, WhatIsWall) && Input.GetKey("right"))
         {
-            _Rb.velocity = new Vector3(_Rb.velocity.x, Math.Max(_Rb.velocity.y, -1), _Rb.velocity.z);
-            Debug.Log("Did hit right : " + hit.collider.gameObject.layer);
-            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.right) * hit.distance, Color.green);
+            _Rb.velocity = new Vector3(_Rb.velocity.x, Math.Max(_Rb.velocity.y, -3), _Rb.velocity.z);
             _Anim.SetBool("OnWall", true);
             return;
         }
+
+        _Anim.SetBool("OnWall", false);
     }
 
     // TO DO : Je pense qu'il vaut mieux gérer une bonne partie dans MouseController::OnCollisionEnter()
@@ -276,7 +275,7 @@ public class PlayerController : MonoBehaviour
                 _HasControl = true;
                 _Rb.useGravity = true;
                 _Rb.velocity = _MouseThrownDirection * 5f;
-                _MouseIFrame = 1;
+                _MouseIFrame = 0.5f;
             }
 
         }
@@ -299,8 +298,7 @@ public class PlayerController : MonoBehaviour
         // Collision avec un sol
         if ((WhatIsGround & (1 << coll.gameObject.layer)) != 0)
         {
-            // Évite une collision avec le plafond
-            if (coll.contacts[0].normal == transform.up)
+            if (coll.contacts[0].normal == Vector3.up)
             {
                 _Grounded = true;
                 _Anim.SetBool("Jump", false);
