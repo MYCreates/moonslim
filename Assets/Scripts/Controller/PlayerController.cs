@@ -40,6 +40,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     float BackgroundPlayerVelocity = 1.2f;
 
+    float BackgroundDistance = 1.5f;
+
     void Awake()
     {
         _Anim = GetComponent<Animator>();
@@ -162,8 +164,12 @@ public class PlayerController : MonoBehaviour
     {
         if (!_AnimBackgroundGoto)
         {
-            if (Input.GetKeyDown(KeyCode.E) && _BackgroundGotoTime <= 0 && _HasControl)
+            if ( Input.GetKeyDown(KeyCode.E) &&
+                _BackgroundGotoTime <= 0 &&
+                _HasControl &&
+                !Physics.Raycast(_Rb.position, new Vector3(1 - 2 * Convert.ToInt32(!_Background), 0, 0), BackgroundDistance) )
             {
+                
                 if (_Background) //On passe au premier plan
                 {
                     _Grounded = false;
@@ -190,7 +196,6 @@ public class PlayerController : MonoBehaviour
 
             if (_BackgroundGotoTime > 0)
             {
-                float BackgroundDistance = 1.5f;
                 float elapsed = 1 - (_BackgroundGotoTime / BackgroundGotoDuration);
                 if (_Background) //Va vers l'arriere plan
                 {
