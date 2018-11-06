@@ -362,7 +362,7 @@ public class PlayerController : MonoBehaviour
 
     public void Kill()
     {
-        // TODO : Anim
+        _Anim.SetTrigger("Dead");
         // TODO : Text Canvas
         _HasControl = false;
 
