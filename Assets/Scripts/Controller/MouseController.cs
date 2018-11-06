@@ -34,6 +34,7 @@ public class MouseController : MonoBehaviour
     {
         float distance = Vector3.Distance(ekto.position, transform.position);
         Vector3 dir = ekto.position - transform.position;
+        Debug.Log(dir.x);
         if (distance <= maxLookDistance && !(dir.x != 0.0f))
         {
             LookAtEkto();

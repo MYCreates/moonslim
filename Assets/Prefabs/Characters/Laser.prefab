@@ -65,6 +65,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ebff6670cd44be4099927a7d76de560, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ColorLaser: {r: 0, g: 1, b: 0.99010324, a: 1}
   RangeLaser: 15
   LaserTime: 0.25
 --- !u!120 &120214508883992850

@@ -203,6 +203,13 @@ public class PlayerController : MonoBehaviour
                 _HasControl = false;
                 PlayerInitialPosition = _Rb.position;
             }
+            else
+            {
+                if (_Background)
+                    transform.localPosition = new Vector3(-1.5f, transform.localPosition.y, transform.localPosition.z);  
+                else
+                    transform.localPosition = new Vector3(0.0f, transform.localPosition.y, transform.localPosition.z);
+            }
         }
         else
         {
@@ -228,7 +235,6 @@ public class PlayerController : MonoBehaviour
             {
                 _HasControl = true;
                 _AnimBackgroundGoto = false;
-                _Grounded = true;//hum?
                 _BackgroundGotoTime = 0;
             }
         }

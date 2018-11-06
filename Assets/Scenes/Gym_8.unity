@@ -1225,21 +1225,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 4
       objectReference: {fileID: 0}
-    - target: {fileID: 114845580880144776, guid: 3f96fe1cd7e664141b102a8432434cf5,
-        type: 2}
-      propertyPath: ColorLaser.r
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114845580880144776, guid: 3f96fe1cd7e664141b102a8432434cf5,
-        type: 2}
-      propertyPath: ColorLaser.g
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114845580880144776, guid: 3f96fe1cd7e664141b102a8432434cf5,
-        type: 2}
-      propertyPath: ColorLaser.b
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3f96fe1cd7e664141b102a8432434cf5, type: 2}
   m_IsPrefabAsset: 0
@@ -1292,7 +1277,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4689820999676980, guid: 484c4f09730ea21419f41906140fbf10, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4689820999676980, guid: 484c4f09730ea21419f41906140fbf10, type: 2}
       propertyPath: m_LocalPosition.y
@@ -1300,7 +1285,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4689820999676980, guid: 484c4f09730ea21419f41906140fbf10, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 5.662
+      value: 1.47
       objectReference: {fileID: 0}
     - target: {fileID: 4689820999676980, guid: 484c4f09730ea21419f41906140fbf10, type: 2}
       propertyPath: m_LocalRotation.x
