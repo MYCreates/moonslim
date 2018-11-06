@@ -12,6 +12,7 @@ public class CameraController : MonoBehaviour {
 	}
 	
 	void Update () {
+        if (!ekto) return;
         transform.position = new Vector3(ekto.position.x + offset, ekto.position.y, ekto.position.z);
 	}
 }

@@ -75,6 +75,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        Debug.Log(_FloorsOn);
         CheckBoost();
         if (_HasControl && !_Dead)
         {          
@@ -253,7 +254,6 @@ public class PlayerController : MonoBehaviour
         RaycastHit hit;
 
         Ray ray = new Ray(transform.position, Vector3.back);
-        Debug.DrawRay(transform.position, Vector3.forward * 10f);
         if (Physics.Raycast(ray, out hit, _Collider.bounds.extents.z + 0.1f, WhatIsWall)
             && horizontal < 0)
         {
@@ -360,7 +360,7 @@ public class PlayerController : MonoBehaviour
         // On s'assure de bien être en contact avec le sol
         if ((WhatIsGround & (1 << coll.gameObject.layer)) != 0)
         {
-            _FloorsOn -= 1;
+            if (_FloorsOn > 0) _FloorsOn -= 1;
             if (_FloorsOn == 0)
             {
                 _Grounded = false;
@@ -401,6 +401,7 @@ public class PlayerController : MonoBehaviour
             Kill();
         }
     }
+
     public void Kill()
     {
         _Score.gameObject.SetActive(false);
