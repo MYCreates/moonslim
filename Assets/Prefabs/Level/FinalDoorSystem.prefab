@@ -502,12 +502,12 @@ BoxCollider:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1552644488744426}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 7963d00ab108d0c4188c714673ed80a8, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2.0281558, y: 3.0504103, z: 0.17074326}
-  m_Center: {x: 5.6669846, y: 4.7223973, z: 1.5325013}
+  m_Size: {x: 2.0281558, y: 4, z: 0.17074326}
+  m_Center: {x: 5.6669846, y: 5.25, z: 1.5325013}
 --- !u!65 &65231708011871858
 BoxCollider:
   m_ObjectHideFlags: 1
