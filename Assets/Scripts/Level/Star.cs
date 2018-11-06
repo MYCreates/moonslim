@@ -1,7 +1,8 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-public enum AgiltyBoost { HigherJump, WallJump};
+//public enum AgiltyBoost { HigherJump, WallJump};
+public enum AgiltyBoost { HigherJump };
 
 [ExecuteInEditMode]
 public class Star : MonoBehaviour
@@ -56,9 +57,9 @@ public class StarManagerEditor : Editor
                 EditorGUILayout.PropertyField(JumpBoost);
                 break;
 
-            case (int)AgiltyBoost.WallJump:
+            //case (int)AgiltyBoost.WallJump:
 
-                break;
+            //    break;
 
             default:
                 break;

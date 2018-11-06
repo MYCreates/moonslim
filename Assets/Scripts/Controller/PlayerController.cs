@@ -79,10 +79,10 @@ public class PlayerController : MonoBehaviour
                 CheckJump();
             }
             FlipCharacter(horizontal);
+            CheckGlide(horizontal);
         }
         CheckMouseGrabbed();
         CheckPlan();
-        CheckGlide();
         CheckOrientation();
     }
 
@@ -103,8 +103,6 @@ public class PlayerController : MonoBehaviour
     {
         if (_Grounded)
         {
-            //float h = horizontal * Time.deltaTime * MoveSpeed;
-            //transform.Translate(h, 0, 0);
             _Rb.velocity = new Vector3(_Rb.velocity.x, _Rb.velocity.y, horizontal * _SpeedBoost);
         }
         else
@@ -218,7 +216,7 @@ public class PlayerController : MonoBehaviour
     }
 
     // Gere la glissade sur les murs
-    void CheckGlide()
+    void CheckGlide(float horizontal)
     {
         if (_Background) return;
         if (_Grounded)
@@ -230,7 +228,9 @@ public class PlayerController : MonoBehaviour
         RaycastHit hit;
 
         Ray ray = new Ray(transform.position, Vector3.back);
-        if (Physics.Raycast(ray, out hit, 1.0f, WhatIsWall) && Input.GetKey("left"))
+        Debug.DrawRay(transform.position, Vector3.forward * 10f);
+        if (Physics.Raycast(ray, out hit, _Collider.bounds.extents.z + 0.1f, WhatIsWall)
+            && horizontal < 0)
         {
             _Rb.velocity = new Vector3(_Rb.velocity.x, Math.Max(_Rb.velocity.y, -3), _Rb.velocity.z);
             _Anim.SetBool("OnWall", true);
@@ -238,7 +238,8 @@ public class PlayerController : MonoBehaviour
         }
 
         ray = new Ray(transform.position, Vector3.forward);
-        if (Physics.Raycast(ray, out hit, 1.0f, WhatIsWall) && Input.GetKey("right"))
+        if (Physics.Raycast(ray, out hit, _Collider.bounds.extents.z + 0.1f, WhatIsWall) 
+            && horizontal > 0)
         {
             _Rb.velocity = new Vector3(_Rb.velocity.x, Math.Max(_Rb.velocity.y, -3), _Rb.velocity.z);
             _Anim.SetBool("OnWall", true);
@@ -351,9 +352,9 @@ public class PlayerController : MonoBehaviour
             case AgiltyBoost.HigherJump:
                 _JumpBoost = star.JumpBoost;
                 break;
-            case AgiltyBoost.WallJump:
+            //case AgiltyBoost.WallJump:
 
-                break;
+            //    break;
             default:
                 break;
         }
