@@ -39,7 +39,7 @@ GameObject:
   - component: {fileID: 54578229513782370}
   - component: {fileID: 114648729950408866}
   - component: {fileID: 95415530253748510}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: MouseLaser
   m_TagString: Untagged
   m_Icon: {fileID: 0}

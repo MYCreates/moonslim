@@ -3,15 +3,28 @@ using UnityEngine.UI;
 
 public class Score : MonoBehaviour {
 
-    [HideInInspector]
-    public int ScoreVal = 0;
+    public int ScoreVal { get; private set; } = 0;
     Text scoreText;
 
-	void Start () {
+    [SerializeField]
+    public GameObject Death;
+
+
+    void Start () {
         scoreText = GetComponent<Text>();	
 	}
-	
-	void Update () {
-        scoreText.text = "Precious stone: " + ScoreVal;	
-	}
+
+    void Update()
+    {
+        scoreText.text = "Precious stone: " + ScoreVal;
+    }
+
+    public void StoneColleccted()
+    {
+        ScoreVal++;
+    }
+    public void EktoHit()
+    {
+        ScoreVal--;
+    }
 }

@@ -4,7 +4,9 @@ using System;
 public class PlayerController : MonoBehaviour
 {
     // Déclaration des variables
+    bool _Dead { get; set; }
     bool _Grounded { get; set; }
+    int _FloorsOn { get; set; }
     bool _Flipped { get; set; }
     float _SpeedBoost { get; set; }
     float _BoostTimer { get; set; }
@@ -12,8 +14,12 @@ public class PlayerController : MonoBehaviour
     Animator _Anim { get; set; }
     Rigidbody _Rb { get; set; }
     Collider _Collider { get; set; }
+    Score _Score { get; set; }
+
+
     bool _Background { get; set; }
     bool _AnimBackgroundGoto { get; set; }
+
     bool _MouseGrabbed { get; set; }
     float _MouseGrabbedDuration { get; set; }
     float _MouseIFrame { get; set; }
@@ -30,26 +36,32 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     float JumpForce = 5.0f;
     [SerializeField]
-    LayerMask WhatIsGround;
-    [SerializeField]
-    LayerMask WhatIsWall;
-    [SerializeField]
-    LayerMask WhatIsMouse;
-    [SerializeField]
-    float BackgroundGotoDuration = 1.0f;
+    float BackgroundGotoDuration = 0.2f;
     [SerializeField]
     float BackgroundPlayerVelocity = 1.2f;
+
+    LayerMask WhatIsGround;
+    LayerMask WhatIsWall;
+    LayerMask WhatIsMouse;
 
     void Awake()
     {
         _Anim = GetComponent<Animator>();
         _Rb = GetComponent<Rigidbody>();
         _Collider = GetComponent<Collider>();
+
+        WhatIsGround = LayerMask.GetMask("Floor");
+        WhatIsWall = LayerMask.GetMask("Walls");
+        WhatIsMouse = LayerMask.GetMask("Hostile");
+
     }
 
     // Utile pour régler des valeurs aux objets
     void Start()
     {
+        _Score = FindObjectOfType<Score>();
+
+        _Dead = false;
         _Grounded = false;
         _Flipped = false;
         _SpeedBoost = 1.0f;
@@ -57,16 +69,13 @@ public class PlayerController : MonoBehaviour
         _JumpBoost = 1.0f;
         _Background = false;
         _HasControl = true;
-
-        //_Rb.freezeRotation = true;
-
     }
 
     void Update()
     {
         CheckBoost();
-        if (_HasControl)
-        {
+        if (_HasControl && !_Dead)
+        {          
             float horizontal = Input.GetAxis("Horizontal") * MoveSpeed;
             float vertical = Input.GetAxis("Vertical") * MoveSpeed;
             if (_Background)
@@ -299,8 +308,10 @@ public class PlayerController : MonoBehaviour
         // Collision avec un sol
         if ((WhatIsGround & (1 << coll.gameObject.layer)) != 0)
         {
-            if (coll.contacts[0].normal == Vector3.up)
+            float dot = Vector3.Dot(coll.contacts[0].normal, Vector3.up);
+            if (dot > 0.25)
             {
+                _FloorsOn += 1;
                 _Grounded = true;
                 _Anim.SetBool("Jump", false);
                 _Anim.SetBool("Grounded", _Grounded);
@@ -313,6 +324,7 @@ public class PlayerController : MonoBehaviour
             // Collider & model
             _Collider.enabled = false;
             _Rb.useGravity = false;
+            Hit();
 
             // Variables
             _MouseGrabbed = true;
@@ -332,8 +344,12 @@ public class PlayerController : MonoBehaviour
         // On s'assure de bien être en contact avec le sol
         if ((WhatIsGround & (1 << coll.gameObject.layer)) != 0)
         {
-            _Grounded = false;
-            _Anim.SetBool("Grounded", false);
+            _FloorsOn -= 1;
+            if (_FloorsOn == 0)
+            {
+                _Grounded = false;
+                _Anim.SetBool("Grounded", false);
+            }
         }
     }
 
@@ -360,11 +376,22 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void Hit()
+    {
+        // TODO : Anim
+        _Score.EktoHit();
+        if (_Score.ScoreVal < 0)
+        {
+            Kill();
+        }
+    }
     public void Kill()
     {
+        _Score.gameObject.SetActive(false);
+        _Score.Death.SetActive(true);
         _Anim.SetTrigger("Dead");
-        // TODO : Text Canvas
-        _HasControl = false;
+        _Dead = true;
+        Destroy(gameObject, 2);
 
     }
 }

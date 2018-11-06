@@ -10,7 +10,7 @@ public class Stone : MonoBehaviour {
     private void OnTriggerEnter(Collider col)
     {
         if (col.tag != "Player") return;
-        score.ScoreVal += 1;
+        score.StoneColleccted();
         // Anim
         gameObject.SetActive(false);    
     }
