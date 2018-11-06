@@ -6,6 +6,8 @@ public class Laser : MonoBehaviour
     private Transform ekto;
 
     [SerializeField]
+    public Color ColorLaser = Color.red;
+    [SerializeField]
     public float RangeLaser = 25.0f;
     [SerializeField]
     public float LaserTime = 1.0f;
@@ -15,7 +17,7 @@ public class Laser : MonoBehaviour
     {
         ekto = FindObjectOfType<PlayerController>().transform;
         laser = GetComponent<LineRenderer>();
-        laser.material.color = Color.red;
+        laser.material.color = ColorLaser;
         beginTime = Time.time;
     }
 
