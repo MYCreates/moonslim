@@ -29,7 +29,7 @@ public class Button : MonoBehaviour {
         if (Status == Status.UP)
         {
             Status = Status.DOWN;
-            transform.position = new Vector3(0.0f, 0.16f, 5.19f);
+            transform.position = new Vector3( transform.position.x, transform.position.y - 0.15f, transform.position.z);
             Door.OpenDoor(this);
         }
     }

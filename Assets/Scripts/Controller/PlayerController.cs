@@ -91,7 +91,7 @@ public class PlayerController : MonoBehaviour
                 CheckJump();
             }
             FlipCharacter(horizontal);
-            CheckGlide(horizontal);
+            CheckGlide();
         }
         CheckMouseGrabbed();
         CheckPlan();
@@ -242,7 +242,7 @@ public class PlayerController : MonoBehaviour
     }
 
     // Gere la glissade sur les murs
-    void CheckGlide(float horizontal)
+    void CheckGlide()
     {
         if (_Background) return;
         if (_Grounded)
@@ -255,18 +255,18 @@ public class PlayerController : MonoBehaviour
 
         Ray ray = new Ray(transform.position, Vector3.back);
         if (Physics.Raycast(ray, out hit, _Collider.bounds.extents.z + 0.1f, WhatIsWall)
-            && horizontal < 0)
+            && (Input.GetKey("left") || Input.GetKey(KeyCode.Q)))
         {
-            _Rb.velocity = new Vector3(_Rb.velocity.x, Math.Max(_Rb.velocity.y, -3), _Rb.velocity.z);
+            _Rb.velocity = new Vector3(_Rb.velocity.x, Math.Max(_Rb.velocity.y, -1), _Rb.velocity.z);
             _Anim.SetBool("OnWall", true);
             return;
         }
 
         ray = new Ray(transform.position, Vector3.forward);
-        if (Physics.Raycast(ray, out hit, _Collider.bounds.extents.z + 0.1f, WhatIsWall) 
-            && horizontal > 0)
+        if (Physics.Raycast(ray, out hit, _Collider.bounds.extents.z + 0.1f, WhatIsWall)
+            && (Input.GetKey("right") || Input.GetKey(KeyCode.D)))
         {
-            _Rb.velocity = new Vector3(_Rb.velocity.x, Math.Max(_Rb.velocity.y, -3), _Rb.velocity.z);
+            _Rb.velocity = new Vector3(_Rb.velocity.x, Math.Max(_Rb.velocity.y, -1), _Rb.velocity.z);
             _Anim.SetBool("OnWall", true);
             return;
         }
@@ -319,6 +319,7 @@ public class PlayerController : MonoBehaviour
     }
 
     // Collision avec le sol
+    // TODO : coll --> col
     void OnCollisionEnter(Collision coll)
     {
         // Collision avec un sol
@@ -349,8 +350,15 @@ public class PlayerController : MonoBehaviour
             _Rb.velocity = _MouseGrabberCenter - _Rb.position;
             _HasControl = false;
             _MouseGrabbedDuration = coll.gameObject.GetComponent<MouseController>().GrabDuration;
-            Vector3 contact = coll.contacts[0].normal;
-            _MouseThrownDirection = new Vector3(contact.x, contact.y + 1f, contact.z);
+
+            // Direction du lancer
+            if (coll.collider.bounds.center.z - _Collider.bounds.center.z < 0)
+            {
+                _MouseThrownDirection = new Vector3(0, 1f, 1f);
+            } else
+            {
+                _MouseThrownDirection = new Vector3(0, 1f, -1f);
+            }
         }
     }
 
