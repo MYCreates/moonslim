@@ -167,7 +167,12 @@ public class PlayerController : MonoBehaviour
             if ( Input.GetKeyDown(KeyCode.E) &&
                 _BackgroundGotoTime <= 0 &&
                 _HasControl &&
-                !Physics.Raycast(_Rb.position, new Vector3(1 - 2 * Convert.ToInt32(!_Background), 0, 0), BackgroundDistance) )
+                !Physics.Raycast(_Rb.position, new Vector3(1 - 2 * Convert.ToInt32(!_Background), 0, 0), BackgroundDistance) &&
+                !Physics.Raycast(_Rb.position + new Vector3(0, _Collider.bounds.extents.y, _Collider.bounds.extents.z), new Vector3(1 - 2 * Convert.ToInt32(!_Background), 0, 0), BackgroundDistance) &&
+                !Physics.Raycast(_Rb.position + new Vector3(0, -_Collider.bounds.extents.y, _Collider.bounds.extents.z), new Vector3(1 - 2 * Convert.ToInt32(!_Background), 0, 0), BackgroundDistance) &&
+                !Physics.Raycast(_Rb.position + new Vector3(0, _Collider.bounds.extents.y, -_Collider.bounds.extents.z), new Vector3(1 - 2 * Convert.ToInt32(!_Background), 0, 0), BackgroundDistance) &&
+                !Physics.Raycast(_Rb.position + new Vector3(0, -_Collider.bounds.extents.y, -_Collider.bounds.extents.z), new Vector3(1 - 2 * Convert.ToInt32(!_Background), 0, 0), BackgroundDistance)
+                )
             {
                 
                 if (_Background) //On passe au premier plan
