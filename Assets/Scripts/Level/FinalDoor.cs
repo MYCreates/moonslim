@@ -14,7 +14,7 @@ public class FinalDoor : MonoBehaviour {
 	
     void OnTriggerEnter(Collider col)
     {
-        if (col.tag == "Player" && score.ScoreVal == NumberOfStonesToOpen)
+        if (col.tag == "Player" && score.ScoreVal >= NumberOfStonesToOpen)
         {
             door.OpenDoor();
         }   
