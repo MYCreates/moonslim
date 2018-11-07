@@ -56,7 +56,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4703519268247526}
-  - component: {fileID: 65363952225031500}
+  - component: {fileID: 65736167327478954}
   m_Layer: 0
   m_Name: DoorCollider
   m_TagString: Untagged
@@ -121,6 +121,7 @@ GameObject:
   - component: {fileID: 4326401593980850}
   - component: {fileID: 33945322258712820}
   - component: {fileID: 23017147829520298}
+  - component: {fileID: 64301755751000836}
   m_Layer: 0
   m_Name: Door_0
   m_TagString: Untagged
@@ -186,7 +187,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1347474054870180}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.59, y: -1.08, z: -2.14}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4086893050821322}
@@ -570,6 +571,20 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1686161514708350}
   m_Mesh: {fileID: 4300000, guid: 6ff9540c8acdc7445b845288dea9f781, type: 3}
+--- !u!64 &64301755751000836
+MeshCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1686161514708350}
+  m_Material: {fileID: 13400000, guid: 7963d00ab108d0c4188c714673ed80a8, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_SkinWidth: 0.01
+  m_Mesh: {fileID: 4300000, guid: 6ff9540c8acdc7445b845288dea9f781, type: 3}
 --- !u!65 &65016555730748452
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -582,18 +597,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.0000001, y: 2, z: 1.0000002}
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
---- !u!65 &65363952225031500
+--- !u!65 &65736167327478954
 BoxCollider:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1125578139586020}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 7963d00ab108d0c4188c714673ed80a8, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2.0281558, y: 3.0504103, z: 0.17074326}
-  m_Center: {x: 5.6669846, y: 4.7223973, z: 1.5325013}
+  m_Size: {x: 2.0281558, y: 4, z: 0.17074326}
+  m_Center: {x: 5.6669846, y: 5.25, z: 1.5325013}
 --- !u!95 &95207134469440398
 Animator:
   serializedVersion: 3
