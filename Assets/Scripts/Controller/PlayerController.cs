@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour
     float _MouseIFrame { get; set; }
     Vector3 _MouseThrownDirection { get; set; }
     Vector3 _MouseGrabberCenter { get; set; }
+    Animator _MouseAnimator { get; set; }
     bool _HasControl { get; set; }
     Vector3 PlayerInitialPosition;
 
@@ -209,6 +210,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
+                transform.localRotation = Quaternion.Euler(0.0f, -90.0f, 0.0f);
                 if (_Background)
                     transform.localPosition = new Vector3(-1.5f, transform.localPosition.y, transform.localPosition.z);  
                 else
@@ -221,6 +223,7 @@ public class PlayerController : MonoBehaviour
 
             if (_BackgroundGotoTime > 0)
             {
+                transform.localRotation = Quaternion.Euler(45.0f, -90.0f, 0.0f);
                 float elapsed = 1 - (_BackgroundGotoTime / BackgroundGotoDuration);
                 if (_Background) //Va vers l'arriere plan
                 {
@@ -277,7 +280,7 @@ public class PlayerController : MonoBehaviour
         _Anim.SetBool("OnWall", false);
     }
 
-    // TO DO : Je pense qu'il vaut mieux gérer une bonne partie dans MouseController::OnCollisionEnter()
+    // TODO : Je pense qu'il vaut mieux gérer une bonne partie dans MouseController::OnCollisionEnter()
     void CheckMouseGrabbed()
     {
         if (_MouseIFrame > 0)
@@ -300,13 +303,19 @@ public class PlayerController : MonoBehaviour
             else
             {
                 // Lancer Ekto
+                _MouseAnimator.SetBool("Grab", false);
+                _MouseAnimator.SetBool("Launch", true);
                 _MouseGrabbed = false;
                 _HasControl = true;
                 _Rb.useGravity = true;
                 _Rb.velocity = _MouseThrownDirection * 5f;
-                _MouseIFrame = 0.5f;
+                _MouseIFrame = 0.75f;
             }
-
+        }
+        else
+        {
+            if (!_MouseAnimator) return;
+            _MouseAnimator.SetBool("Launch", false);
         }
     }
 
@@ -322,13 +331,12 @@ public class PlayerController : MonoBehaviour
     }
 
     // Collision avec le sol
-    // TODO : coll --> col
-    void OnCollisionEnter(Collision coll)
+    void OnCollisionEnter(Collision col)
     {
         // Collision avec un sol
-        if ((WhatIsGround & (1 << coll.gameObject.layer)) != 0)
+        if ((WhatIsGround & (1 << col.gameObject.layer)) != 0)
         {
-            float dot = Vector3.Dot(coll.contacts[0].normal, Vector3.up);
+            float dot = Vector3.Dot(col.contacts[0].normal, Vector3.up);
             if (dot > 0.25)
             {
                 _FloorsOn += 1;
@@ -339,7 +347,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // Mouse grabbed
-        if ((WhatIsMouse & (1 << coll.gameObject.layer)) != 0 && _MouseIFrame <= 0)
+        if ((WhatIsMouse & (1 << col.gameObject.layer)) != 0 && _MouseIFrame <= 0)
         {
             // Collider & model
             _Collider.enabled = false;
@@ -349,13 +357,15 @@ public class PlayerController : MonoBehaviour
             // Variables
             _MouseGrabbed = true;
             _Grounded = false;
-            _MouseGrabberCenter = coll.gameObject.transform.position;
+            _MouseGrabberCenter = col.gameObject.transform.position;
             _Rb.velocity = _MouseGrabberCenter - _Rb.position;
             _HasControl = false;
-            _MouseGrabbedDuration = coll.gameObject.GetComponent<MouseController>().GrabDuration;
+            _MouseGrabbedDuration = col.gameObject.GetComponent<MouseController>().GrabDuration;
+            _MouseAnimator = col.gameObject.GetComponent<Animator>();
+            _MouseAnimator.SetBool("Grab", true);
 
             // Direction du lancer
-            if (coll.collider.bounds.center.z - _Collider.bounds.center.z < 0)
+            if (col.collider.bounds.center.z - _Collider.bounds.center.z < 0)
             {
                 _MouseThrownDirection = new Vector3(0, 1f, 1f);
             } else
@@ -366,10 +376,10 @@ public class PlayerController : MonoBehaviour
     }
 
     // Collision avec le sol
-    void OnCollisionExit(Collision coll)
+    void OnCollisionExit(Collision col)
     {
         // On s'assure de bien être en contact avec le sol
-        if ((WhatIsGround & (1 << coll.gameObject.layer)) != 0)
+        if ((WhatIsGround & (1 << col.gameObject.layer)) != 0)
         {
             if (_FloorsOn > 0) _FloorsOn -= 1;
             if (_FloorsOn == 0)
