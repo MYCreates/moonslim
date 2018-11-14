@@ -214,30 +214,26 @@ Prefab:
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
+      objectReference: {fileID: 136336008}
+    - target: {fileID: 114390521985703794, guid: 4375fc75a221faf49a997b34ae1ee7c8,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ResumeGame
       objectReference: {fileID: 0}
-    - target: {fileID: 114998346874560840, guid: 4375fc75a221faf49a997b34ae1ee7c8,
+    - target: {fileID: 114390521985703794, guid: 4375fc75a221faf49a997b34ae1ee7c8,
         type: 2}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-    - target: {fileID: 114818994014709970, guid: 4375fc75a221faf49a997b34ae1ee7c8,
-        type: 2}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-    - target: {fileID: 114730722798410740, guid: 4375fc75a221faf49a997b34ae1ee7c8,
-        type: 2}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-    - target: {fileID: 114462315166287254, guid: 4375fc75a221faf49a997b34ae1ee7c8,
-        type: 2}
-      propertyPath: pauseMenu
-      value: 
-      objectReference: {fileID: 975807448}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4375fc75a221faf49a997b34ae1ee7c8, type: 2}
   m_IsPrefabAsset: 0
+--- !u!114 &136336008 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114462315166287254, guid: 4375fc75a221faf49a997b34ae1ee7c8,
+    type: 2}
+  m_PrefabInternal: {fileID: 136336006}
+  m_Script: {fileID: 11500000, guid: e0788c95590428645a8ac63a488825f2, type: 3}
 --- !u!1 &272260592
 GameObject:
   m_ObjectHideFlags: 0
@@ -905,11 +901,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &975807448 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1794705447964766, guid: 4375fc75a221faf49a997b34ae1ee7c8,
-    type: 2}
-  m_PrefabInternal: {fileID: 136336006}
 --- !u!1 &1015929374
 GameObject:
   m_ObjectHideFlags: 0
