@@ -210,30 +210,9 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 114390521985703794, guid: 4375fc75a221faf49a997b34ae1ee7c8,
-        type: 2}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 136336008}
-    - target: {fileID: 114390521985703794, guid: 4375fc75a221faf49a997b34ae1ee7c8,
-        type: 2}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ResumeGame
-      objectReference: {fileID: 0}
-    - target: {fileID: 114390521985703794, guid: 4375fc75a221faf49a997b34ae1ee7c8,
-        type: 2}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4375fc75a221faf49a997b34ae1ee7c8, type: 2}
   m_IsPrefabAsset: 0
---- !u!114 &136336008 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 114462315166287254, guid: 4375fc75a221faf49a997b34ae1ee7c8,
-    type: 2}
-  m_PrefabInternal: {fileID: 136336006}
-  m_Script: {fileID: 11500000, guid: e0788c95590428645a8ac63a488825f2, type: 3}
 --- !u!1 &272260592
 GameObject:
   m_ObjectHideFlags: 0
