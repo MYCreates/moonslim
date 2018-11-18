@@ -24,9 +24,9 @@ public class Button : MonoBehaviour {
         Status = Status.UP;
     }
 
-    void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider col)
     {
-        if (Status == Status.UP)
+        if (col.tag == "Player" && Status == Status.UP)
         {
             Status = Status.DOWN;
             transform.position = new Vector3( transform.position.x, transform.position.y - 0.15f, transform.position.z);
