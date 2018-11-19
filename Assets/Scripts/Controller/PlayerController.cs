@@ -194,12 +194,16 @@ public class PlayerController : MonoBehaviour
                     _Grounded = false;
                     _Anim.SetBool("Back", false);
                     _Rb.useGravity = true;
+                    GetComponent<BoxCollider>().enabled = true;
+                    GetComponent<SphereCollider>().enabled = false;
                 }
                 else //on passe à l'arriere plan
                 {
                     _Grounded = false;
                     _Anim.SetBool("Back", true);
                     _Rb.useGravity = false;
+                    GetComponent<SphereCollider>().enabled = true;
+                    GetComponent<BoxCollider>().enabled = false;
                 }
 
                 _BackgroundGotoTime = BackgroundGotoDuration;
