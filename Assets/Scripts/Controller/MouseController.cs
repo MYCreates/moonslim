@@ -59,7 +59,6 @@ public class MouseController : MonoBehaviour
             }
         }
         CheckGrab();
-        Debug.Log(Grab);
     }
 
     void LookAtEkto()
