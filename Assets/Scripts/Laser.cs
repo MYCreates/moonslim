@@ -33,9 +33,9 @@ public class Laser : MonoBehaviour
         laser.SetPosition(0, ray.origin);
         if (Physics.Raycast(ray, out hit, RangeLaser))
         {
-            if (hit.collider.tag == "Destroyable") Destroy(hit.collider.gameObject);
+            if (hit.collider.CompareTag("Destroyable")) Destroy(hit.collider.gameObject);
 
-            if (hit.collider.tag == "Player") hit.collider.gameObject.GetComponent<PlayerController>().Kill();
+            if (hit.collider.CompareTag("Player")) hit.collider.gameObject.GetComponent<PlayerController>().Kill();
 
             if (hit.collider)
             {

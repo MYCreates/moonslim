@@ -27,7 +27,7 @@ public class Cheese : MonoBehaviour {
 
     private void OnTriggerEnter(Collider col)
     {
-        if (col.tag != "Player") return;
+        if (!col.CompareTag("Player")) return;
         col.GetComponent<PlayerController>().EatCheese(speedBoost, boostTime);
         GetComponent<SpriteRenderer>().enabled = false;
         GetComponent<Collider>().enabled = false;

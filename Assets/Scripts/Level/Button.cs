@@ -26,7 +26,7 @@ public class Button : MonoBehaviour {
 
     void OnTriggerEnter(Collider col)
     {
-        if (col.tag == "Player" && Status == Status.UP)
+        if (col.CompareTag("Player") && Status == Status.UP)
         {
             Status = Status.DOWN;
             transform.position = new Vector3( transform.position.x, transform.position.y - 0.15f, transform.position.z);

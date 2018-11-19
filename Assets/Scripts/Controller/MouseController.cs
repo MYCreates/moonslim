@@ -85,7 +85,7 @@ public class MouseController : MonoBehaviour
 
     void Shoot()
     {
-        //Reset the time when we shoot
+        //Reset the time when the mouse shoot
         lastShotTime = Time.time;
         Instantiate(laserPrefab, laser.position, laser.rotation, transform);
     }
@@ -129,36 +129,35 @@ public class MouseController : MonoBehaviour
 
     void OnCollisionEnter(Collision col)
     {
-        if (col.gameObject.tag == "Player")
+        if (!col.gameObject.CompareTag("Player")) return;
+        
+        _Rb.constraints = RigidbodyConstraints.FreezeAll;
+
+        // Ekto grabbed
+        if (IFrame <= 0)
         {
-            _Rb.constraints = RigidbodyConstraints.FreezeAll;
+            // Collider & model
+            _Collider.enabled = false;
+            ekto.GetComponent<PlayerController>().Grab(transform.position);
 
-            // Ekto grabbed
-            if (IFrame <= 0)
-            {
-                // Collider & model
-                _Collider.enabled = false;
-                ekto.GetComponent<PlayerController>().Grab(transform.position);
+            // Variables
+            Grab = true;
+            GrabTime = GrabDuration;
+            _Animator.SetBool("Grab", true);
 
-                // Variables
-                Grab = true;
-                GrabTime = GrabDuration;
-                _Animator.SetBool("Grab", true);
-
-                // Direction du lancer
-                if (_Collider.bounds.center.z - ekto.GetComponent<Collider>().bounds.center.z < 0)
-                    ThrowDirection = new Vector3(0, 1f, 1f);
-                else
-                    ThrowDirection = new Vector3(0, 1f, -1f);
-            }
+            // Direction du lancer
+            if (_Collider.bounds.center.z - ekto.GetComponent<Collider>().bounds.center.z < 0)
+                ThrowDirection = new Vector3(0, 1f, 1f);
+            else
+                ThrowDirection = new Vector3(0, 1f, -1f);
         }
+        
     }
 
     private void OnCollisionExit(Collision col)
     {
-        if (col.gameObject.tag == "Player")
-        {
-            _Rb.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionX;
-        }
+        if (!col.gameObject.CompareTag("Player")) return;
+
+        _Rb.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionX;
     }
 }

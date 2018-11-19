@@ -31,8 +31,8 @@ public class PlayerController : MonoBehaviour
     bool Background = false;
     bool AnimBackgroundGoto = false;
     float BackgroundGotoTime = 0.0f;
-    float BackgroundDistance = 3.0f;
-    float BackgroundGotoDuration = 0.2f;
+    float BackgroundDistance = 2.0f;
+    float BackgroundGotoDuration = 0.4f;
 
     // Valeurs exposées
     [SerializeField]
@@ -187,6 +187,9 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
+                // Si Ekto a une rotation en x car il vient de finir son animation
+                if (transform.localRotation.x != 0.0f)
+                    transform.localRotation = Quaternion.Euler(0.0f, -90.0f, 0.0f);
                 // Si on est pas en animation, on veut s'assurer que ekto est bien placé
                 if (Background)
                     transform.localPosition = new Vector3(-BackgroundDistance, transform.localPosition.y, transform.localPosition.z);  
@@ -286,6 +289,9 @@ public class PlayerController : MonoBehaviour
         // Collision hostile
         if ((WhatIsHostile & (1 << col.gameObject.layer)) != 0)
             Hit();
+
+        if (col.gameObject.CompareTag("Eatable"))
+            col.gameObject.SetActive(false);
     }
 
     void OnCollisionExit(Collision col)
