@@ -11,7 +11,10 @@ public class ButtonManager : MonoBehaviour {
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
-            pause = pause ? ResumeGame() : Pause();
+            if (pause)
+                ResumeGame();
+            else
+                Pause();
     }
 
     public void ChangeScene(string scene)
@@ -24,17 +27,17 @@ public class ButtonManager : MonoBehaviour {
         Application.Quit();
     }
 
-    public bool Pause()
+    public void Pause()
     {
         Time.timeScale = 0;
+        pause = true;
         pauseMenu.SetActive(true);
-        return true;
     }
 
-    public bool ResumeGame()
+    public void ResumeGame()
     {
         Time.timeScale = 1;
+        pause = false;
         pauseMenu.SetActive(false);
-        return false;
     }
 }
