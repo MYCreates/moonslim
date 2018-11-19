@@ -19,12 +19,24 @@ public class MouseController : MonoBehaviour
     [SerializeField]
     public float GrabDuration = 0.5f;
 
+
+    bool Grab { get; set; }
+    float GrabTime { get; set; }
+    float IFrame { get; set; }
+    Vector3 ThrowDirection { get; set; }
+
+    Animator _Animator { get; set; }
+    Collider _Collider { get; set; }
+
+
     private Rigidbody _Rb;
 
    void Start()
    {
         ekto = FindObjectOfType<PlayerController>().transform;
         _Rb = GetComponent<Rigidbody>();
+        _Animator = GetComponent<Animator>();
+        _Collider = GetComponent<Collider>();
         if (hasLaser)
             laser = transform.GetChild(0);
 
@@ -45,7 +57,9 @@ public class MouseController : MonoBehaviour
                     Shoot();
                 }
             }
-        }  
+        }
+        CheckGrab();
+        Debug.Log(Grab);
     }
 
     void LookAtEkto()
@@ -77,12 +91,67 @@ public class MouseController : MonoBehaviour
         Instantiate(laserPrefab, laser.position, laser.rotation, transform);
     }
 
+    void CheckGrab()
+    {
+        if (IFrame > 0)
+        {
+            IFrame -= Time.deltaTime;
+            if (IFrame <= 0)
+            {
+                _Collider.enabled = true;
+            }
+        }
+
+        if (Grab)
+        {
+            if (GrabTime > 0)
+            {
+                GrabTime -= Time.deltaTime;
+                ekto.GetComponent<Rigidbody>().velocity = transform.position - ekto.position;
+            }
+            else
+            {
+                // Lancer Ekto
+                _Animator.SetBool("Grab", false);
+                _Animator.SetBool("Launch", true);
+                Grab = false;
+                ekto.GetComponent<PlayerController>().HasControl = true;
+                ekto.GetComponent<Rigidbody>().useGravity = true;
+                ekto.GetComponent<Rigidbody>().velocity = ThrowDirection * 5f;
+                IFrame = 0.75f;
+            }
+        }
+        else
+        {
+            if (!_Animator) return;
+            _Animator.SetBool("Launch", false);
+        }
+    }
+
     void OnCollisionEnter(Collision col)
     {
         if (col.gameObject.tag == "Player")
         {
             _Rb.constraints = RigidbodyConstraints.FreezeAll;
-            // TO DO : GERER ICI L'ATTRAPAGE
+
+            // Ekto grabbed
+            if (IFrame <= 0)
+            {
+                // Collider & model
+                _Collider.enabled = false;
+                ekto.GetComponent<PlayerController>().Grab(transform.position);
+
+                // Variables
+                Grab = true;
+                GrabTime = GrabDuration;
+                _Animator.SetBool("Grab", true);
+
+                // Direction du lancer
+                if (_Collider.bounds.center.z - ekto.GetComponent<Collider>().bounds.center.z < 0)
+                    ThrowDirection = new Vector3(0, 1f, 1f);
+                else
+                    ThrowDirection = new Vector3(0, 1f, -1f);
+            }
         }
     }
 

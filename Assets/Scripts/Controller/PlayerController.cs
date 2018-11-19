@@ -3,33 +3,36 @@ using System;
 
 public class PlayerController : MonoBehaviour
 {
-    // Déclaration des variables
-    bool _Dead { get; set; }
-    bool _Grounded { get; set; }
-    int _FloorsOn { get; set; }
-    bool _Flipped { get; set; }
-    float _SpeedBoost { get; set; }
-    float _BoostTimer { get; set; }
-    float _JumpBoost { get; set; }
-    Animator _Anim { get; set; }
-    Rigidbody _Rb { get; set; }
-    Collider _Collider { get; set; }
-    Score _Score { get; set; }
+    // Variables d'accès rapide à des Components
+    Animator _Anim;
+    Rigidbody _Rb;
+    Collider _Collider;
+    Score _Score;
 
+    // Variables de contrôle
+    bool Dead = false;
+    public bool HasControl { get; set; } = true;
+    bool Flipped = false;
 
-    bool _Background { get; set; }
-    bool _AnimBackgroundGoto { get; set; }
+    // Variables de gestion des collisions
+    bool Grounded = false;
+    int FloorsOn = 0;
+    LayerMask WhatIsGround;
+    LayerMask WhatIsWall;
+    LayerMask WhatIsHostile;
 
-    bool _MouseGrabbed { get; set; }
-    float _MouseGrabbedDuration { get; set; }
-    float _MouseIFrame { get; set; }
-    Vector3 _MouseThrownDirection { get; set; }
-    Vector3 _MouseGrabberCenter { get; set; }
-    Animator _MouseAnimator { get; set; }
-    bool _HasControl { get; set; }
+    // Variables de gestion des boost
+    float SpeedBoost = 1.0f;
+    float BoostTimer = 0.0f;
+    float JumpBoost = 1.0f;
+
+    // Variables de gestion des passages entre les plans
     Vector3 PlayerInitialPosition;
-
-    float _BackgroundGotoTime;
+    bool Background = false;
+    bool AnimBackgroundGoto = false;
+    float BackgroundGotoTime = 0.0f;
+    float BackgroundDistance = 3.0f;
+    float BackgroundGotoDuration = 0.2f;
 
     // Valeurs exposées
     [SerializeField]
@@ -37,15 +40,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     float JumpForce = 5.0f;
     [SerializeField]
-    float BackgroundGotoDuration = 0.2f;
-    [SerializeField]
-    float BackgroundPlayerVelocity = 1.2f;
-
-    LayerMask WhatIsGround;
-    LayerMask WhatIsWall;
-    LayerMask WhatIsMouse;
-
-    float BackgroundDistance = 3.0f;
+    float BackgroundMoveSpeed = 1.2f;
 
     void Awake()
     {
@@ -55,33 +50,22 @@ public class PlayerController : MonoBehaviour
 
         WhatIsGround = LayerMask.GetMask("Floor");
         WhatIsWall = LayerMask.GetMask("Walls");
-        WhatIsMouse = LayerMask.GetMask("Hostile");
-
+        WhatIsHostile = LayerMask.GetMask("Hostile");
     }
 
-    // Utile pour régler des valeurs aux objets
     void Start()
     {
         _Score = FindObjectOfType<Score>();
-
-        _Dead = false;
-        _Grounded = false;
-        _Flipped = false;
-        _SpeedBoost = 1.0f;
-        _BoostTimer = 0.0f;
-        _JumpBoost = 1.0f;
-        _Background = false;
-        _HasControl = true;
     }
 
     void Update()
     {
         CheckBoost();
-        if (_HasControl && !_Dead)
+        if (HasControl && !Dead)
         {          
             float horizontal = Input.GetAxis("Horizontal") * MoveSpeed;
             float vertical = Input.GetAxis("Vertical") * MoveSpeed;
-            if (_Background)
+            if (Background)
             {
                 BackgroundMove(horizontal, vertical);
             }
@@ -93,7 +77,6 @@ public class PlayerController : MonoBehaviour
             FlipCharacter(horizontal);
             CheckGlide();
         }
-        CheckMouseGrabbed();
         CheckPlan();
         CheckOrientation();
     }
@@ -101,122 +84,111 @@ public class PlayerController : MonoBehaviour
     // Vérifie que le Boost de Vitesse n'est pas terminé
     private void CheckBoost()
     {
-        if (_SpeedBoost == 1) return;
-        _BoostTimer -= Time.deltaTime;
-        if (_BoostTimer < 0)
+        if (SpeedBoost == 1) return;
+        BoostTimer -= Time.deltaTime;
+        if (BoostTimer < 0)
         {
-            _BoostTimer = 0.0f;
-            _SpeedBoost = 1.0f;
+            BoostTimer = 0.0f;
+            SpeedBoost = 1.0f;
         }
     }
 
-    // Gère le mouvement horizontal
+    // Mouvement horizontal en premier plan
     void HorizontalMove(float horizontal)
     {
-        if (_Grounded)
-        {
-            _Rb.velocity = new Vector3(_Rb.velocity.x, _Rb.velocity.y, horizontal * _SpeedBoost);
-        }
+        if (Grounded)
+            _Rb.velocity = new Vector3(_Rb.velocity.x, _Rb.velocity.y, horizontal * SpeedBoost);
         else
-        {
-            
+        {           
             if (horizontal < 0)
-            {
-                _Rb.velocity = new Vector3(_Rb.velocity.x, _Rb.velocity.y, Math.Max(-3 * _SpeedBoost, _Rb.velocity.z + horizontal * _SpeedBoost / 5));
-            }
+                _Rb.velocity = new Vector3(_Rb.velocity.x, _Rb.velocity.y, Math.Max(-3 * SpeedBoost, _Rb.velocity.z + horizontal * SpeedBoost / 5));
             else if (horizontal > 0)
-            {
-                _Rb.velocity = new Vector3(_Rb.velocity.x, _Rb.velocity.y, Math.Min(3 * _SpeedBoost, _Rb.velocity.z + horizontal * _SpeedBoost / 5));
-            } else
-            {
-                _Rb.velocity = new Vector3(_Rb.velocity.x, _Rb.velocity.y, Math.Min(3 * _SpeedBoost, Math.Max(_Rb.velocity.z, -3 * _SpeedBoost)));
-            }
+                _Rb.velocity = new Vector3(_Rb.velocity.x, _Rb.velocity.y, Math.Min(3 * SpeedBoost, _Rb.velocity.z + horizontal * SpeedBoost / 5));
+            else
+                _Rb.velocity = new Vector3(_Rb.velocity.x, _Rb.velocity.y, Math.Min(3 * SpeedBoost, Math.Max(_Rb.velocity.z, -3 * SpeedBoost)));
         }
     }
 
-    // Gère le mouvement dans le fond
+    // Mouvement dans le fond
     void BackgroundMove(float horizontal, float vertical)
     {
-        _Rb.velocity = new Vector3(_Rb.velocity.x, vertical * _SpeedBoost * BackgroundPlayerVelocity, horizontal * _SpeedBoost * BackgroundPlayerVelocity);
+        _Rb.velocity = new Vector3(_Rb.velocity.x, vertical * SpeedBoost * BackgroundMoveSpeed, horizontal * SpeedBoost * BackgroundMoveSpeed);
     }
 
-    // Gère l'orientation du joueur
+    // Orientation du joueur
     private void FlipCharacter(float horizontal)
     {
-        if (horizontal > 0 && !_Flipped)
-        {
-            _Flipped = true;
-        }
-        else if (horizontal < 0 && _Flipped)
-        {
-            _Flipped = false;
-        }
-        GetComponent<SpriteRenderer>().flipX = _Flipped;
+        if (horizontal > 0 && !Flipped)
+            Flipped = true;
+        else if (horizontal < 0 && Flipped)
+            Flipped = false;
+        GetComponent<SpriteRenderer>().flipX = Flipped;
     }
 
-    // Gère le saut du personnage, ainsi que son animation de saut
+    // Saut du personnage
     void CheckJump()
     {
-        if (_Grounded && _HasControl)
+        if (Grounded && HasControl)
         {
             if (Input.GetButtonDown("Jump"))
             {
-                _Rb.AddForce(new Vector3(0, JumpForce * _JumpBoost, 0), ForceMode.Impulse);
-                _Grounded = false;
+                _Rb.AddForce(new Vector3(0, JumpForce * JumpBoost, 0), ForceMode.Impulse);
+                Grounded = false;
                 _Anim.SetBool("Grounded", false);
                 _Anim.SetBool("Jump", true);
             }
         }
     }
 
-    // Vérifie dans quel plan le personnage se situe
+    // Gestion des différents plans
     void CheckPlan()
     {
-        if (!_AnimBackgroundGoto)
+        if (!AnimBackgroundGoto)
         {
+            // Si le joueur appuie sur E et qu'il a le droit de changer de plan
             if ( Input.GetKeyDown(KeyCode.E) &&
-                _BackgroundGotoTime <= 0 &&
-                _HasControl &&
-                !Physics.Raycast(_Rb.position, new Vector3(1 - 2 * Convert.ToInt32(!_Background), 0, 0), BackgroundDistance, 11, QueryTriggerInteraction.Ignore) &&
-                !Physics.Raycast(_Rb.position + new Vector3(0, _Collider.bounds.extents.y, _Collider.bounds.extents.z), new Vector3(1 - 2 * Convert.ToInt32(!_Background), 0, 0), BackgroundDistance, 11, QueryTriggerInteraction.Ignore) &&
-                !Physics.Raycast(_Rb.position + new Vector3(0, -_Collider.bounds.extents.y, _Collider.bounds.extents.z), new Vector3(1 - 2 * Convert.ToInt32(!_Background), 0, 0), BackgroundDistance, 11, QueryTriggerInteraction.Ignore) &&
-                !Physics.Raycast(_Rb.position + new Vector3(0, _Collider.bounds.extents.y, -_Collider.bounds.extents.z), new Vector3(1 - 2 * Convert.ToInt32(!_Background), 0, 0), BackgroundDistance, 11, QueryTriggerInteraction.Ignore) &&
-                !Physics.Raycast(_Rb.position + new Vector3(0, -_Collider.bounds.extents.y, -_Collider.bounds.extents.z), new Vector3(1 - 2 * Convert.ToInt32(!_Background), 0, 0), BackgroundDistance, 11, QueryTriggerInteraction.Ignore) && 
-                !Physics.Raycast(_Rb.position + new Vector3(0, 0, _Collider.bounds.extents.z), new Vector3(1 - 2 * Convert.ToInt32(!_Background), 0, 0), BackgroundDistance, 11, QueryTriggerInteraction.Ignore) &&
-                !Physics.Raycast(_Rb.position + new Vector3(0, _Collider.bounds.extents.y, 0), new Vector3(1 - 2 * Convert.ToInt32(!_Background), 0, 0), BackgroundDistance, 11, QueryTriggerInteraction.Ignore) &&
-                !Physics.Raycast(_Rb.position + new Vector3(0, 0, -_Collider.bounds.extents.z), new Vector3(1 - 2 * Convert.ToInt32(!_Background), 0, 0), BackgroundDistance, 11, QueryTriggerInteraction.Ignore) &&
-                !Physics.Raycast(_Rb.position + new Vector3(0, -_Collider.bounds.extents.y, 0), new Vector3(1 - 2 * Convert.ToInt32(!_Background), 0, 0), BackgroundDistance, 11, QueryTriggerInteraction.Ignore)
+                BackgroundGotoTime <= 0 &&
+                HasControl &&
+                !Physics.Raycast(_Rb.position, new Vector3(1 - 2 * Convert.ToInt32(!Background), 0, 0), BackgroundDistance, 11, QueryTriggerInteraction.Ignore) &&
+                !Physics.Raycast(_Rb.position + new Vector3(0, _Collider.bounds.extents.y, _Collider.bounds.extents.z), new Vector3(1 - 2 * Convert.ToInt32(!Background), 0, 0), BackgroundDistance, 11, QueryTriggerInteraction.Ignore) &&
+                !Physics.Raycast(_Rb.position + new Vector3(0, -_Collider.bounds.extents.y, _Collider.bounds.extents.z), new Vector3(1 - 2 * Convert.ToInt32(!Background), 0, 0), BackgroundDistance, 11, QueryTriggerInteraction.Ignore) &&
+                !Physics.Raycast(_Rb.position + new Vector3(0, _Collider.bounds.extents.y, -_Collider.bounds.extents.z), new Vector3(1 - 2 * Convert.ToInt32(!Background), 0, 0), BackgroundDistance, 11, QueryTriggerInteraction.Ignore) &&
+                !Physics.Raycast(_Rb.position + new Vector3(0, -_Collider.bounds.extents.y, -_Collider.bounds.extents.z), new Vector3(1 - 2 * Convert.ToInt32(!Background), 0, 0), BackgroundDistance, 11, QueryTriggerInteraction.Ignore) && 
+                !Physics.Raycast(_Rb.position + new Vector3(0, 0, _Collider.bounds.extents.z), new Vector3(1 - 2 * Convert.ToInt32(!Background), 0, 0), BackgroundDistance, 11, QueryTriggerInteraction.Ignore) &&
+                !Physics.Raycast(_Rb.position + new Vector3(0, _Collider.bounds.extents.y, 0), new Vector3(1 - 2 * Convert.ToInt32(!Background), 0, 0), BackgroundDistance, 11, QueryTriggerInteraction.Ignore) &&
+                !Physics.Raycast(_Rb.position + new Vector3(0, 0, -_Collider.bounds.extents.z), new Vector3(1 - 2 * Convert.ToInt32(!Background), 0, 0), BackgroundDistance, 11, QueryTriggerInteraction.Ignore) &&
+                !Physics.Raycast(_Rb.position + new Vector3(0, -_Collider.bounds.extents.y, 0), new Vector3(1 - 2 * Convert.ToInt32(!Background), 0, 0), BackgroundDistance, 11, QueryTriggerInteraction.Ignore)
                 )
             {
-                
-                if (_Background) //On passe au premier plan
+                //DECLANCHE :
+
+                if (Background) // ARRIERE PLAN -> PREMIER PLAN
                 {
-                    _Grounded = false;
+                    Grounded = false;
                     _Anim.SetBool("Back", false);
                     _Rb.useGravity = true;
                     GetComponent<BoxCollider>().enabled = true;
                     GetComponent<SphereCollider>().enabled = false;
                 }
-                else //on passe à l'arriere plan
+                else // PREMIER PLAN -> ARRIERE PLAN
                 {
-                    _Grounded = false;
+                    Grounded = false;
                     _Anim.SetBool("Back", true);
                     _Rb.useGravity = false;
                     GetComponent<SphereCollider>().enabled = true;
                     GetComponent<BoxCollider>().enabled = false;
                 }
-
-                _BackgroundGotoTime = BackgroundGotoDuration;
-                _Background = !_Background;
-                _AnimBackgroundGoto = true;
-                _HasControl = false;
-                PlayerInitialPosition = _Rb.position;
+                
+                BackgroundGotoTime = BackgroundGotoDuration;
+                Background = !Background;
+                AnimBackgroundGoto = true;
+                HasControl = false;
+                PlayerInitialPosition = transform.position;
             }
             else
             {
-                if (!_Grounded)
-                    transform.localRotation = Quaternion.Euler(0.0f, -90.0f, 0.0f);
-                if (_Background)
+                // Si on est pas en animation, on veut s'assurer que ekto est bien placé
+                if (Background)
                     transform.localPosition = new Vector3(-BackgroundDistance, transform.localPosition.y, transform.localPosition.z);  
                 else
                     transform.localPosition = new Vector3(0.0f, transform.localPosition.y, transform.localPosition.z);
@@ -224,30 +196,30 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            _Rb.velocity = new Vector3(0, 0, 0);
+            _Rb.velocity = new Vector3(0.0f, 0.0f, 0.0f);
 
-            if (_BackgroundGotoTime > 0)
+            if (BackgroundGotoTime > 0)
             {
                 transform.localRotation = Quaternion.Euler(45.0f, -90.0f, 0.0f);
-                float elapsed = 1 - (_BackgroundGotoTime / BackgroundGotoDuration);
-                if (_Background) //Va vers l'arriere plan
+                float elapsed = 1 - (BackgroundGotoTime / BackgroundGotoDuration);
+                if (Background) //Va vers l'arriere plan
                 {
                     Vector3 goBackground = new Vector3(-BackgroundDistance, 0, 0);
                     _Rb.MovePosition(Vector3.Lerp(PlayerInitialPosition, PlayerInitialPosition + goBackground, elapsed));
                 }
                 else //Va vers le premier plan
                 {
-                    Vector3 goForeground = new Vector3(BackgroundDistance, 0, 0);
+                    Vector3 goForeground = new Vector3(BackgroundDistance, 0.0f, 0.0f);
                     _Rb.MovePosition(Vector3.Lerp(PlayerInitialPosition, PlayerInitialPosition + goForeground, elapsed));
                 }
-                _BackgroundGotoTime -= Time.deltaTime;
-                _BackgroundGotoTime = Math.Max(_BackgroundGotoTime, 0);
+                BackgroundGotoTime -= Time.deltaTime;
+                BackgroundGotoTime = Math.Max(BackgroundGotoTime, 0);
             }
             else
             {
-                _HasControl = true;
-                _AnimBackgroundGoto = false;
-                _BackgroundGotoTime = 0;
+                HasControl = true;
+                AnimBackgroundGoto = false;
+                BackgroundGotoTime = 0;
             }
         }
     }
@@ -255,8 +227,8 @@ public class PlayerController : MonoBehaviour
     // Gere la glissade sur les murs
     void CheckGlide()
     {
-        if (_Background) return;
-        if (_Grounded)
+        if (Background) return;
+        if (Grounded)
         {
             _Anim.SetBool("OnWall", false);
             return;
@@ -285,111 +257,46 @@ public class PlayerController : MonoBehaviour
         _Anim.SetBool("OnWall", false);
     }
 
-    // TODO : Je pense qu'il vaut mieux gérer une bonne partie dans MouseController::OnCollisionEnter()
-    void CheckMouseGrabbed()
-    {
-        if (_MouseIFrame > 0)
-        {
-            _MouseIFrame -= Time.deltaTime;
-            if (_MouseIFrame <= 0)
-            {
-                // TODO : pour bien faire, prendre le collider DE LA SOURIS plutot que celui d'Ekto --> pas d'embrouille dans les iframes
-                _Collider.enabled = true;
-            }
-        }
 
-        if (_MouseGrabbed)
-        {
-            if (_MouseGrabbedDuration > 0)
-            {
-                _MouseGrabbedDuration -= Time.deltaTime;
-                _Rb.velocity = _MouseGrabberCenter - _Rb.position;
-            }
-            else
-            {
-                // Lancer Ekto
-                _MouseAnimator.SetBool("Grab", false);
-                _MouseAnimator.SetBool("Launch", true);
-                _MouseGrabbed = false;
-                _HasControl = true;
-                _Rb.useGravity = true;
-                _Rb.velocity = _MouseThrownDirection * 5f;
-                _MouseIFrame = 0.75f;
-            }
-        }
-        else
-        {
-            if (!_MouseAnimator) return;
-            _MouseAnimator.SetBool("Launch", false);
-        }
-    }
-
-    // Vérifie qu'en l'air le personnage ne vrille pas
+    // En l'air le personnage reste droit
     void CheckOrientation()
     {
-        if (!_Grounded || _Background)
+        if (!Grounded || Background)
         {
-            _Rb.rotation = Quaternion.Euler(0, -90, 0);
-            _Rb.angularVelocity = new Vector3(0, 0, 0);
+            _Rb.rotation = Quaternion.Euler(0.0f, -90.0f, 0.0f);
+            _Rb.angularVelocity = new Vector3(0.0f, 0.0f, 0.0f);
 
         }
     }
 
-    // Collision avec le sol
     void OnCollisionEnter(Collision col)
     {
-        // Collision avec un sol
+        // Collision avec le sol
         if ((WhatIsGround & (1 << col.gameObject.layer)) != 0)
         {
             float dot = Vector3.Dot(col.contacts[0].normal, Vector3.up);
             if (dot > 0.25)
             {
-                _FloorsOn += 1;
-                _Grounded = true;
+                FloorsOn += 1;
+                Grounded = true;
                 _Anim.SetBool("Jump", false);
-                _Anim.SetBool("Grounded", _Grounded);
+                _Anim.SetBool("Grounded", Grounded);
             }
         }
-
-        // Mouse grabbed
-        if ((WhatIsMouse & (1 << col.gameObject.layer)) != 0 && _MouseIFrame <= 0)
-        {
-            // Collider & model
-            _Collider.enabled = false;
-            _Rb.useGravity = false;
+        // Collision hostile
+        if ((WhatIsHostile & (1 << col.gameObject.layer)) != 0)
             Hit();
-
-            // Variables
-            _MouseGrabbed = true;
-            _Grounded = false;
-            _MouseGrabberCenter = col.gameObject.transform.position;
-            _Rb.velocity = _MouseGrabberCenter - _Rb.position;
-            _HasControl = false;
-            _MouseGrabbedDuration = col.gameObject.GetComponent<MouseController>().GrabDuration;
-            _MouseAnimator = col.gameObject.GetComponent<Animator>();
-            _MouseAnimator.SetBool("Grab", true);
-
-            // Direction du lancer
-            if (col.collider.bounds.center.z - _Collider.bounds.center.z < 0)
-            {
-                _MouseThrownDirection = new Vector3(0, 1f, 1f);
-            } else
-            {
-                _MouseThrownDirection = new Vector3(0, 1f, -1f);
-            }
-        }
     }
 
-    // Collision avec le sol
     void OnCollisionExit(Collision col)
     {
-        // On s'assure de bien être en contact avec le sol
+        // Collision était avec le sol
         if ((WhatIsGround & (1 << col.gameObject.layer)) != 0)
         {
-            if (_FloorsOn > 0) _FloorsOn -= 1;
-            if (_FloorsOn == 0)
+            if (FloorsOn > 0) FloorsOn -= 1;
+            if (FloorsOn == 0)
             {
-                _Grounded = false;
+                Grounded = false;
                 _Anim.SetBool("Grounded", false);
             }
         }
@@ -397,18 +304,18 @@ public class PlayerController : MonoBehaviour
 
     public void EatCheese(float speed, float time)
     {
-        // TODO : Anim
-        _SpeedBoost = speed;
-        _BoostTimer += time;
+        // TODO : Anim + SON
+        SpeedBoost = speed;
+        BoostTimer += time;
     }
 
     public void UseStar(Star star)
     {
-        // TODO : Anim
+        // TODO : Anim + SON
         switch (star.TypeBoost)
         {
             case AgiltyBoost.HigherJump:
-                _JumpBoost = star.JumpBoost;
+                JumpBoost = star.JumpBoost;
                 break;
             //case AgiltyBoost.WallJump:
 
@@ -418,9 +325,17 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void Grab(Vector3 mousePosition)
+    {
+        _Rb.useGravity = false;
+        Grounded = false;
+        _Rb.velocity = mousePosition - _Rb.position;
+        HasControl = false;
+    }
+
     public void Hit()
     {
-        // TODO : Anim
+        // TODO : Anim + SON
         _Score.EktoHit();
         if (_Score.ScoreVal < 0)
         {
@@ -430,11 +345,11 @@ public class PlayerController : MonoBehaviour
 
     public void Kill()
     {
+        // TODO : Anim + SON
         _Score.gameObject.SetActive(false);
         _Score.Death.SetActive(true);
         _Anim.SetTrigger("Dead");
-        _Dead = true;
+        Dead = true;
         Destroy(gameObject, 2);
-
     }
 }
