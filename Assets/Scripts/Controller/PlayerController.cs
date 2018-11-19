@@ -45,7 +45,7 @@ public class PlayerController : MonoBehaviour
     LayerMask WhatIsWall;
     LayerMask WhatIsMouse;
 
-    float BackgroundDistance = 1.5f;
+    float BackgroundDistance = 3.0f;
 
     void Awake()
     {
@@ -214,9 +214,10 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                transform.localRotation = Quaternion.Euler(0.0f, -90.0f, 0.0f);
+                if (!_Grounded)
+                    transform.localRotation = Quaternion.Euler(0.0f, -90.0f, 0.0f);
                 if (_Background)
-                    transform.localPosition = new Vector3(-1.5f, transform.localPosition.y, transform.localPosition.z);  
+                    transform.localPosition = new Vector3(-BackgroundDistance, transform.localPosition.y, transform.localPosition.z);  
                 else
                     transform.localPosition = new Vector3(0.0f, transform.localPosition.y, transform.localPosition.z);
             }

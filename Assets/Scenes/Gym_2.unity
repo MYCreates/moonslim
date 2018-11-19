@@ -1432,7 +1432,17 @@ Prefab:
       propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 65167473756358340, guid: 1c980203ee1b45f439a04f0920bb2da8,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1902340160247096, guid: 1c980203ee1b45f439a04f0920bb2da8, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 65155893850735286, guid: 1c980203ee1b45f439a04f0920bb2da8, type: 2}
   m_SourcePrefab: {fileID: 100100000, guid: 1c980203ee1b45f439a04f0920bb2da8, type: 2}
   m_IsPrefabAsset: 0
 --- !u!1001 &1832097936
@@ -1564,6 +1574,16 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4689820999676980, guid: 484c4f09730ea21419f41906140fbf10, type: 2}
       propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 54906631055530456, guid: 484c4f09730ea21419f41906140fbf10,
+        type: 2}
+      propertyPath: m_CollisionDetection
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 54906631055530456, guid: 484c4f09730ea21419f41906140fbf10,
+        type: 2}
+      propertyPath: m_IsKinematic
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
