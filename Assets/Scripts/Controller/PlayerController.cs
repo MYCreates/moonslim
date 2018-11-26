@@ -145,12 +145,15 @@ public class PlayerController : MonoBehaviour
     {
         if (!AnimBackgroundGoto)
         {
+            int layerMask = 1 << 11;
+            layerMask = ~layerMask;
+
             // Si le joueur appuie sur E et qu'il a le droit de changer de plan
             if ( Input.GetKeyDown(KeyCode.E) &&
                 BackgroundGotoTime <= 0 &&
                 HasControl &&
                 !Physics.Raycast(_Rb.position, new Vector3(1 - 2 * Convert.ToInt32(!Background), 0, 0), BackgroundDistance, 11, QueryTriggerInteraction.Ignore) &&
-                !Physics.Raycast(_Rb.position + new Vector3(0, _Collider.bounds.extents.y, _Collider.bounds.extents.z), new Vector3(1 - 2 * Convert.ToInt32(!Background), 0, 0), BackgroundDistance, 11, QueryTriggerInteraction.Ignore) &&
+                !Physics.Raycast(_Rb.position + new Vector3(0, _Collider.bounds.extents.y, _Collider.bounds.extents.z), new Vector3(1 - 2 * Convert.ToInt32(!Background), 0, 0), BackgroundDistance, layerMask, QueryTriggerInteraction.Ignore) &&
                 !Physics.Raycast(_Rb.position + new Vector3(0, -_Collider.bounds.extents.y, _Collider.bounds.extents.z), new Vector3(1 - 2 * Convert.ToInt32(!Background), 0, 0), BackgroundDistance, 11, QueryTriggerInteraction.Ignore) &&
                 !Physics.Raycast(_Rb.position + new Vector3(0, _Collider.bounds.extents.y, -_Collider.bounds.extents.z), new Vector3(1 - 2 * Convert.ToInt32(!Background), 0, 0), BackgroundDistance, 11, QueryTriggerInteraction.Ignore) &&
                 !Physics.Raycast(_Rb.position + new Vector3(0, -_Collider.bounds.extents.y, -_Collider.bounds.extents.z), new Vector3(1 - 2 * Convert.ToInt32(!Background), 0, 0), BackgroundDistance, 11, QueryTriggerInteraction.Ignore) && 
