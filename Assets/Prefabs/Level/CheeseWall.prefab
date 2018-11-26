@@ -1787,7 +1787,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4602437311796240}
   m_Layer: 0
-  m_Name: CheeseWallRECT
+  m_Name: CheeseWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
