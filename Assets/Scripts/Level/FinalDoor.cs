@@ -8,7 +8,7 @@ public class FinalDoor : MonoBehaviour {
     Score score;
 
     void Start () {
-        door = GetComponentInChildren<Door>();
+        door = GetComponent<Door>();
         score = FindObjectOfType<Score>();
     }
 	
