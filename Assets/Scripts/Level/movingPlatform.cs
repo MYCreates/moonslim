@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class movingPlatform : MonoBehaviour {
+public class MovingPlatform : MonoBehaviour {
 
     [SerializeField]
     float distance = 10.0f;
