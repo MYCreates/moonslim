@@ -10,15 +10,40 @@ public class MovingPlatform : MonoBehaviour {
     float speed = 0.5f;
 
     int direction = 1;
-    Rigidbody _Rb;
+    float deltaDist;
+    float totalDist;
+
+    Rigidbody player;
 
     // Use this for initialization
     void Start () {
-        _Rb = GetComponent<Rigidbody>();
+        deltaDist = 0.0f;
+        totalDist = 0.0f;
+        player = null;
     }
-	
-	// Update is called once per frame
-	void Update () {
-        _Rb.MovePosition(new Vector3(0.0f, 0.0f, Time.deltaTime * speed));
-	}
+
+    // Update is called once per frame
+    void Update() {
+        deltaDist = Time.deltaTime * speed;
+        transform.position = transform.position + new Vector3(0.0f, 0.0f, deltaDist * direction);
+        if (player != null)
+            player.MovePosition(player.position + new Vector3(0.0f, 0.0f, deltaDist * direction));
+        totalDist += deltaDist;
+        if (totalDist >= distance)
+        {
+            direction *= -1;
+            totalDist = 0.0f;
+        }
+    }
+
+    void OnCollisionEnter(Collision col)
+    {
+        player = col.gameObject.GetComponent<Rigidbody>();
+        Debug.Log("COLLISION");
+    }
+
+    void OnCollisionExit(Collision col)
+    {
+        player = null;
+    }
 }
