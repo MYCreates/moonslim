@@ -10,7 +10,7 @@ public class Stone : MonoBehaviour {
     private void OnTriggerEnter(Collider col)
     {
         if (!col.CompareTag("Player")) return;
-        score.StoneColleccted();
+        score.StoneCollected();
         // TODO : Anim + SON
         gameObject.SetActive(false);    
     }

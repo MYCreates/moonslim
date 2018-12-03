@@ -7,6 +7,10 @@ public class EndGame : MonoBehaviour {
     [SerializeField]
     GameObject winCanvas;
 
+    [SerializeField]
+    GameObject deathCanvas;
+
+
     private void OnTriggerEnter(Collider collider)
     {
         if (collider.CompareTag("Player"))
@@ -17,5 +21,12 @@ public class EndGame : MonoBehaviour {
     {
         winCanvas.SetActive(true);
         Time.timeScale = 0;
+        FindObjectOfType<ButtonManager>().pauseAvailable = false;
+    }
+
+    public void Dead()
+    {
+        deathCanvas.SetActive(true);
+        FindObjectOfType<ButtonManager>().pauseAvailable = false;
     }
 }
