@@ -154,13 +154,13 @@ public class PlayerController : MonoBehaviour
                 HasControl &&
                 !Physics.Raycast(_Rb.position, new Vector3(1 - 2 * Convert.ToInt32(!Background), 0, 0), BackgroundDistance, 11, QueryTriggerInteraction.Ignore) &&
                 !Physics.Raycast(_Rb.position + new Vector3(0, _Collider.bounds.extents.y, _Collider.bounds.extents.z), new Vector3(1 - 2 * Convert.ToInt32(!Background), 0, 0), BackgroundDistance, layerMask, QueryTriggerInteraction.Ignore) &&
-                !Physics.Raycast(_Rb.position + new Vector3(0, -_Collider.bounds.extents.y, _Collider.bounds.extents.z), new Vector3(1 - 2 * Convert.ToInt32(!Background), 0, 0), BackgroundDistance, 11, QueryTriggerInteraction.Ignore) &&
-                !Physics.Raycast(_Rb.position + new Vector3(0, _Collider.bounds.extents.y, -_Collider.bounds.extents.z), new Vector3(1 - 2 * Convert.ToInt32(!Background), 0, 0), BackgroundDistance, 11, QueryTriggerInteraction.Ignore) &&
-                !Physics.Raycast(_Rb.position + new Vector3(0, -_Collider.bounds.extents.y, -_Collider.bounds.extents.z), new Vector3(1 - 2 * Convert.ToInt32(!Background), 0, 0), BackgroundDistance, 11, QueryTriggerInteraction.Ignore) && 
-                !Physics.Raycast(_Rb.position + new Vector3(0, 0, _Collider.bounds.extents.z), new Vector3(1 - 2 * Convert.ToInt32(!Background), 0, 0), BackgroundDistance, 11, QueryTriggerInteraction.Ignore) &&
-                !Physics.Raycast(_Rb.position + new Vector3(0, _Collider.bounds.extents.y, 0), new Vector3(1 - 2 * Convert.ToInt32(!Background), 0, 0), BackgroundDistance, 11, QueryTriggerInteraction.Ignore) &&
-                !Physics.Raycast(_Rb.position + new Vector3(0, 0, -_Collider.bounds.extents.z), new Vector3(1 - 2 * Convert.ToInt32(!Background), 0, 0), BackgroundDistance, 11, QueryTriggerInteraction.Ignore) &&
-                !Physics.Raycast(_Rb.position + new Vector3(0, -_Collider.bounds.extents.y, 0), new Vector3(1 - 2 * Convert.ToInt32(!Background), 0, 0), BackgroundDistance, 11, QueryTriggerInteraction.Ignore)
+                !Physics.Raycast(_Rb.position + new Vector3(0, -_Collider.bounds.extents.y, _Collider.bounds.extents.z), new Vector3(1 - 2 * Convert.ToInt32(!Background), 0, 0), BackgroundDistance, layerMask, QueryTriggerInteraction.Ignore) &&
+                !Physics.Raycast(_Rb.position + new Vector3(0, _Collider.bounds.extents.y, -_Collider.bounds.extents.z), new Vector3(1 - 2 * Convert.ToInt32(!Background), 0, 0), BackgroundDistance, layerMask, QueryTriggerInteraction.Ignore) &&
+                !Physics.Raycast(_Rb.position + new Vector3(0, -_Collider.bounds.extents.y, -_Collider.bounds.extents.z), new Vector3(1 - 2 * Convert.ToInt32(!Background), 0, 0), BackgroundDistance, layerMask, QueryTriggerInteraction.Ignore) && 
+                !Physics.Raycast(_Rb.position + new Vector3(0, 0, _Collider.bounds.extents.z), new Vector3(1 - 2 * Convert.ToInt32(!Background), 0, 0), BackgroundDistance, layerMask, QueryTriggerInteraction.Ignore) &&
+                !Physics.Raycast(_Rb.position + new Vector3(0, _Collider.bounds.extents.y, 0), new Vector3(1 - 2 * Convert.ToInt32(!Background), 0, 0), BackgroundDistance, layerMask, QueryTriggerInteraction.Ignore) &&
+                !Physics.Raycast(_Rb.position + new Vector3(0, 0, -_Collider.bounds.extents.z), new Vector3(1 - 2 * Convert.ToInt32(!Background), 0, 0), BackgroundDistance, layerMask, QueryTriggerInteraction.Ignore) &&
+                !Physics.Raycast(_Rb.position + new Vector3(0, -_Collider.bounds.extents.y, 0), new Vector3(1 - 2 * Convert.ToInt32(!Background), 0, 0), BackgroundDistance, layerMask, QueryTriggerInteraction.Ignore)
                 )
             {
                 //DECLANCHE :
