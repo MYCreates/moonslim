@@ -6,10 +6,6 @@ public class Score : MonoBehaviour {
     public int ScoreVal { get; private set; } = 0;
     Text scoreText;
 
-    [SerializeField]
-    public GameObject Death;
-
-
     void Start () {
         scoreText = GetComponent<Text>();	
 	}
@@ -19,7 +15,7 @@ public class Score : MonoBehaviour {
         scoreText.text = "Precious stone: " + ScoreVal;
     }
 
-    public void StoneColleccted()
+    public void StoneCollected()
     {
         ScoreVal++;
     }

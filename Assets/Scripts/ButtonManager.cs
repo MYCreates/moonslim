@@ -7,6 +7,7 @@ public class ButtonManager : MonoBehaviour {
     [SerializeField]
     private GameObject pauseMenu;
     private bool pause = false;
+    public bool pauseAvailable;
 
     private void Start()
     {
@@ -15,6 +16,7 @@ public class ButtonManager : MonoBehaviour {
 
     private void Update()
     {
+        if (!pauseAvailable) return;
         if (Input.GetKeyDown(KeyCode.Escape))
             if (pause)
                 ResumeGame();
