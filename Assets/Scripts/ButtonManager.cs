@@ -8,6 +8,11 @@ public class ButtonManager : MonoBehaviour {
     private GameObject pauseMenu;
     private bool pause = false;
 
+    private void Start()
+    {
+        Time.timeScale = 1;
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
