@@ -356,7 +356,7 @@ public class PlayerController : MonoBehaviour
     {
         // TODO : Anim + SON
         _Score.gameObject.SetActive(false);
-        _Score.Death.SetActive(true);
+        FindObjectOfType<EndGame>().Dead();
         _Anim.SetTrigger("Dead");
         Dead = true;
         Destroy(gameObject, 2);
