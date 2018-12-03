@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class MouseController : MonoBehaviour
 {
@@ -54,7 +55,7 @@ public class MouseController : MonoBehaviour
             {
                 if ((Time.time - lastShotTime) > fireRate)
                 {
-                    Shoot();
+                    StartCoroutine(Shoot());
                 }
             }
         }
@@ -83,10 +84,14 @@ public class MouseController : MonoBehaviour
     }
 
 
-    void Shoot()
+    IEnumerator Shoot()
     {
+        int wait = 2;
+        lastShotTime = Time.time + wait;
+        _Animator.SetBool("Ready", true);
+        yield return new WaitForSeconds(wait);
+        _Animator.SetBool("Ready", false);
         //Reset the time when the mouse shoot
-        lastShotTime = Time.time;
         Instantiate(laserPrefab, laser.position, laser.rotation, transform);
     }
 

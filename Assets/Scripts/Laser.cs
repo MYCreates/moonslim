@@ -23,6 +23,7 @@ public class Laser : MonoBehaviour
 
     void Update()
     {
+        print(Time.time);
         if (Time.time - beginTime > LaserTime) Destroy(gameObject);
 
         Vector3 dir = ekto.position - transform.position;
