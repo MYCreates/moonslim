@@ -29,11 +29,16 @@ public class MouseController : MonoBehaviour
     Animator _Animator { get; set; }
     Collider _Collider { get; set; }
 
-
     private Rigidbody _Rb;
 
-   void Start()
+    [SerializeField]
+    AudioClip audioClip;
+    AudioSource source;
+
+
+    void Start()
    {
+        source = GetComponent<AudioSource>();
         ekto = FindObjectOfType<PlayerController>().transform;
         _Rb = GetComponent<Rigidbody>();
         _Animator = GetComponent<Animator>();
@@ -116,6 +121,7 @@ public class MouseController : MonoBehaviour
             else
             {
                 // Lancer Ekto
+                source.PlayOneShot(audioClip, 0.5f);
                 _Animator.SetBool("Grab", false);
                 _Animator.SetBool("Launch", true);
                 Grab = false;

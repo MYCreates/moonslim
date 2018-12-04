@@ -42,6 +42,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     float BackgroundMoveSpeed = 1.2f;
 
+    // Sons
+    [SerializeField]
+    AudioClip audioClip;
+    AudioSource source;
+
     void Awake()
     {
         _Anim = GetComponent<Animator>();
@@ -51,6 +56,8 @@ public class PlayerController : MonoBehaviour
         WhatIsGround = LayerMask.GetMask("Floor");
         WhatIsWall = LayerMask.GetMask("Walls");
         WhatIsHostile = LayerMask.GetMask("Hostile");
+
+        source = GetComponent<AudioSource>();
     }
 
     void Start()
@@ -133,6 +140,7 @@ public class PlayerController : MonoBehaviour
             if (Input.GetButtonDown("Jump"))
             {
                 _Rb.AddForce(new Vector3(0, JumpForce * JumpBoost, 0), ForceMode.Impulse);
+                source.PlayOneShot(audioClip, 0.5f);
                 Grounded = false;
                 _Anim.SetBool("Grounded", false);
                 _Anim.SetBool("Jump", true);

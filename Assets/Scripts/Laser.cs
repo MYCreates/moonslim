@@ -13,12 +13,18 @@ public class Laser : MonoBehaviour
     public float LaserTime = 1.0f;
     private float beginTime = 0.0f;
 
+    [SerializeField]
+    AudioClip audioClip;
+    AudioSource source;
+
     void Start()
     {
+        source = GetComponent<AudioSource>();
         ekto = FindObjectOfType<PlayerController>().transform;
         laser = GetComponent<LineRenderer>();
         laser.material.color = ColorLaser;
         beginTime = Time.time;
+        source.PlayOneShot(audioClip, 0.5f);
     }
 
     void Update()

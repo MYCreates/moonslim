@@ -25,12 +25,22 @@ public class Star : MonoBehaviour
     [SerializeField]
     private float _JumpBoost = 2.0f;
 
+    [SerializeField]
+    AudioClip audioClip;
+    AudioSource source;
+
+    void Start()
+    {
+        source = GetComponent<AudioSource>();
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (!other.CompareTag("Player")) return;
-        // TODO : SON
+        source.PlayOneShot(audioClip, 0.5f);
         other.GetComponent<PlayerController>().UseStar(this);
-        gameObject.SetActive(false);
+        GetComponent<SpriteRenderer>().enabled = false;
+        GetComponent<Collider>().enabled = false;
     }
 }
 
@@ -38,19 +48,24 @@ public class Star : MonoBehaviour
 [CanEditMultipleObjects]
 public class StarManagerEditor : Editor
 {
-
+    MonoScript script;
     SerializedProperty TypeBoost;
     SerializedProperty JumpBoost;
+    SerializedProperty AudioClip;
 
 
     private void OnEnable()
     {
+        script = MonoScript.FromMonoBehaviour((Star)target);
         TypeBoost = serializedObject.FindProperty("_TypeBoost");
         JumpBoost = serializedObject.FindProperty("_JumpBoost");
+        AudioClip = serializedObject.FindProperty("audioClip");
     }
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
+        script = EditorGUILayout.ObjectField(script, typeof(MonoScript), false) as MonoScript;
+        EditorGUILayout.PropertyField(AudioClip);
         EditorGUILayout.PropertyField(TypeBoost);
         switch (TypeBoost.intValue)
         {

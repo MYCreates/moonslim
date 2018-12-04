@@ -3,7 +3,7 @@
 public class Cheese : MonoBehaviour {
 
     [SerializeField]
-    AudioClip audio;
+    AudioClip audioClip;
     AudioSource source;
 
     [SerializeField]
@@ -20,7 +20,6 @@ public class Cheese : MonoBehaviour {
     }
     private void Update()
     {
-        // Anim 
         if (disabledTime > 0)
         {
             disabledTime -= Time.deltaTime;
@@ -35,7 +34,7 @@ public class Cheese : MonoBehaviour {
     private void OnTriggerEnter(Collider col)
     {
         if (!col.CompareTag("Player")) return;
-        source.PlayOneShot(audio, 0.5f);
+        source.PlayOneShot(audioClip, 0.5f);
         col.GetComponent<PlayerController>().EatCheese(speedBoost, boostTime);
         GetComponent<SpriteRenderer>().enabled = false;
         GetComponent<Collider>().enabled = false;
