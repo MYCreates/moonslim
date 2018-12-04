@@ -18,6 +18,7 @@ public class ButtonManager : MonoBehaviour {
 
     private void Update()
     {
+        Debug.Log(checkpoint);
         if (!pauseAvailable) return;
         if (Input.GetKeyDown(KeyCode.Escape))
             if (pause)
@@ -28,7 +29,16 @@ public class ButtonManager : MonoBehaviour {
 
     public void ChangeScene(string scene)
     {
-        SceneManager.LoadScene(scene);
+        switch (checkpoint) {
+            case 1 :
+                // TODO : change to new scene
+                SceneManager.LoadScene(scene);
+                break;
+            case 0:
+            default:
+                SceneManager.LoadScene(scene);
+                break;
+        } 
     }
 
     public void QuitGame()
