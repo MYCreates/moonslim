@@ -43,7 +43,7 @@ public class Star : MonoBehaviour
         GetComponent<Collider>().enabled = false;
     }
 }
-
+/*
 [CustomEditor(typeof(Star))]
 [CanEditMultipleObjects]
 public class StarManagerEditor : Editor
@@ -83,4 +83,4 @@ public class StarManagerEditor : Editor
         serializedObject.ApplyModifiedProperties();
 
     }
-}
+}*/
