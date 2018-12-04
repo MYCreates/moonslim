@@ -39,7 +39,7 @@ public class MovingPlatform : MonoBehaviour {
     void OnCollisionEnter(Collision col)
     {
         player = col.gameObject.GetComponent<Rigidbody>();
-        Debug.Log("COLLISION");
+        //Debug.Log("COLLISION");
     }
 
     void OnCollisionExit(Collision col)
