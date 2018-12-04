@@ -108,11 +108,11 @@ public class PlayerController : MonoBehaviour
         else
         {           
             if (horizontal < 0)
-                _Rb.velocity = new Vector3(_Rb.velocity.x, _Rb.velocity.y, Math.Max(-3 * SpeedBoost, _Rb.velocity.z + horizontal * SpeedBoost / 5));
+                _Rb.velocity = new Vector3(_Rb.velocity.x, _Rb.velocity.y, Math.Max(-MoveSpeed * SpeedBoost, _Rb.velocity.z + horizontal * SpeedBoost / 10));
             else if (horizontal > 0)
-                _Rb.velocity = new Vector3(_Rb.velocity.x, _Rb.velocity.y, Math.Min(3 * SpeedBoost, _Rb.velocity.z + horizontal * SpeedBoost / 5));
+                _Rb.velocity = new Vector3(_Rb.velocity.x, _Rb.velocity.y, Math.Min(MoveSpeed * SpeedBoost, _Rb.velocity.z + horizontal * SpeedBoost / 10));
             else
-                _Rb.velocity = new Vector3(_Rb.velocity.x, _Rb.velocity.y, Math.Min(3 * SpeedBoost, Math.Max(_Rb.velocity.z, -3 * SpeedBoost)));
+                _Rb.velocity = new Vector3(_Rb.velocity.x, _Rb.velocity.y, Math.Min(MoveSpeed * SpeedBoost, Math.Max(_Rb.velocity.z, -MoveSpeed * SpeedBoost)));
         }
     }
 

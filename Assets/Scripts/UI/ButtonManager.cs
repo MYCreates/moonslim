@@ -9,6 +9,8 @@ public class ButtonManager : MonoBehaviour {
     private bool pause = false;
     public bool pauseAvailable;
 
+    public int checkpoint = 0;
+
     private void Start()
     {
         Time.timeScale = 1;
