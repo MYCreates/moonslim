@@ -18,7 +18,6 @@ public class ButtonManager : MonoBehaviour {
 
     private void Update()
     {
-        Debug.Log(checkpoint);
         if (!pauseAvailable) return;
         if (Input.GetKeyDown(KeyCode.Escape))
             if (pause)

@@ -108,6 +108,7 @@ public class MouseController : MonoBehaviour
             if (IFrame <= 0)
             {
                 _Collider.enabled = true;
+                _Rb.useGravity = true;
             }
         }
 
@@ -148,6 +149,7 @@ public class MouseController : MonoBehaviour
         if (IFrame <= 0)
         {
             // Collider & model
+            _Rb.useGravity = false;
             _Collider.enabled = false;
             ekto.GetComponent<PlayerController>().Grab(transform.position);
 

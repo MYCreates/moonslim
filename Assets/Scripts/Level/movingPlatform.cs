@@ -15,15 +15,13 @@ public class MovingPlatform : MonoBehaviour {
 
     Rigidbody player;
 
-    // Use this for initialization
     void Start () {
         deltaDist = 0.0f;
         totalDist = 0.0f;
         player = null;
     }
 
-    // Update is called once per frame
-    void Update() {
+    void FixedUpdate() {
         deltaDist = Time.deltaTime * speed;
         transform.position = transform.position + new Vector3(0.0f, 0.0f, deltaDist * direction);
         if (player != null)
