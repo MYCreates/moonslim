@@ -41,6 +41,12 @@ public class PlayerController : MonoBehaviour
     float JumpForce = 5.0f;
     [SerializeField]
     float BackgroundMoveSpeed = 1.2f;
+    [SerializeField]
+    float InvulnerableTime = 3.0f;
+
+    // Variables de gestion de l'Invulnérabilité
+    bool Invulnerable = false;
+    float InvulnerableElapsedTime = 0.0f;
 
     // Sons
     [SerializeField]
@@ -83,6 +89,7 @@ public class PlayerController : MonoBehaviour
             }
             FlipCharacter(horizontal);
             CheckGlide();
+            CheckInvulnerable();
         }
         CheckPlan();
         CheckOrientation();
@@ -283,6 +290,22 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // Gere le timer de la frame d'invincibilité
+    void CheckInvulnerable()
+    {
+        if(Invulnerable && InvulnerableElapsedTime >= InvulnerableTime)
+        {
+            Invulnerable = false;
+            InvulnerableElapsedTime = 0.0f;
+        }
+        if (Invulnerable)
+        {
+            gameObject.GetComponentInChildren<SpriteRenderer>().enabled = (1 == Math.Floor((InvulnerableElapsedTime - Mathf.Floor(InvulnerableElapsedTime)) * 10.0) % 2);
+            InvulnerableElapsedTime += Time.deltaTime;
+            //Debug.Log(Math.Floor((InvulnerableElapsedTime - Mathf.Floor(InvulnerableElapsedTime)) * 10.0) % 2);    
+        }
+    }
+
     void OnCollisionEnter(Collision col)
     {
         // Collision avec le sol
@@ -298,8 +321,9 @@ public class PlayerController : MonoBehaviour
             }
         }
         // Collision hostile
-        if ((WhatIsHostile & (1 << col.gameObject.layer)) != 0)
+        if (((WhatIsHostile & (1 << col.gameObject.layer)) != 0) && !Invulnerable)
             Hit();
+        
 
         if (col.gameObject.CompareTag("Eatable"))
             col.gameObject.SetActive(false);
@@ -357,6 +381,9 @@ public class PlayerController : MonoBehaviour
         if (_Score.ScoreVal < 0)
         {
             Kill();
+        } else
+        {
+            Invulnerable = true;
         }
     }
 
