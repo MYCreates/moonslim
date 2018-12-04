@@ -7,12 +7,12 @@ public class Score : MonoBehaviour {
     Text scoreText;
 
     void Start () {
-        scoreText = GetComponent<Text>();	
+        scoreText = GetComponentInChildren<Text>();	
 	}
 
     void Update()
     {
-        scoreText.text = "Precious stone: " + ScoreVal;
+        scoreText.text = ScoreVal.ToString() ;
     }
 
     public void StoneCollected()
