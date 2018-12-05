@@ -32,8 +32,7 @@ public class Laser : MonoBehaviour
         print(Time.time);
         if (Time.time - beginTime > LaserTime) Destroy(gameObject);
 
-        Vector3 dir = ekto.position - transform.position;
-        dir.y = 0;
+        Vector3 dir = new Vector3(0f, 0f, ekto.position.z - transform.position.z);
         Ray ray = new Ray(transform.position, dir);
         RaycastHit hit;
 

@@ -79,7 +79,7 @@ public class MouseController : MonoBehaviour
                 laser.transform.localPosition = new Vector3(xT, laser.transform.localPosition.y, laser.transform.localPosition.z);
             }
             return;
-        }
+        } 
         GetComponent<SpriteRenderer>().flipX = false;
         if (hasLaser)
         {
