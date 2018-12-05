@@ -13,11 +13,8 @@ public class Checkpoint : MonoBehaviour {
         buttonManager = FindObjectOfType<ButtonManager>();
 	}
 
-    void Update() { }
-
     void OnTriggerEnter( Collider col)
     {
-        Debug.Log("Triggered");
         buttonManager.checkpoint = checkpointNumber;
     }
     

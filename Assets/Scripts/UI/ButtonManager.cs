@@ -29,21 +29,24 @@ public class ButtonManager : MonoBehaviour {
 
     public void ChangeScene(string scene)
     {
-        if (scene == "Level")
+        // C'est hardcodé mais on est saoulés :(
+        if (string.Equals(scene, "Level"))
         {
             switch (checkpoint)
             {
                 case 1:
-                    // TODO : change to new scene
-                    SceneManager.LoadScene(scene + "_check1");
+                    SceneManager.LoadScene("Level_check1");
                     break;
                 case 0:
                 default:
-                    SceneManager.LoadScene(scene);
+                    SceneManager.LoadScene("Level");
                     break;
             }
+        } else
+        {
+            SceneManager.LoadScene(scene);
         }
-        SceneManager.LoadScene(scene);
+        
     }
 
     public void QuitGame()
