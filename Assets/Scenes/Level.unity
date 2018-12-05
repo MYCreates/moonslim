@@ -18157,11 +18157,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4689820999676980, guid: 484c4f09730ea21419f41906140fbf10, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -28.3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4689820999676980, guid: 484c4f09730ea21419f41906140fbf10, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 99.9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4689820999676980, guid: 484c4f09730ea21419f41906140fbf10, type: 2}
       propertyPath: m_LocalRotation.x
@@ -18235,6 +18235,11 @@ Prefab:
         type: 2}
       propertyPath: MaxDistance
       value: 6326.6875
+      objectReference: {fileID: 0}
+    - target: {fileID: 212785683657155354, guid: 484c4f09730ea21419f41906140fbf10,
+        type: 2}
+      propertyPath: m_FlipX
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 484c4f09730ea21419f41906140fbf10, type: 2}
