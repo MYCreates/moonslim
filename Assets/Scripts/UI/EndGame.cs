@@ -10,6 +10,16 @@ public class EndGame : MonoBehaviour {
     [SerializeField]
     GameObject deathCanvas;
 
+    [SerializeField]
+    AudioClip audioClipWin;
+    [SerializeField]
+    AudioClip audioClipDeath;
+    AudioSource source;
+
+    private void Start()
+    {
+        source = GetComponent<AudioSource>();
+    }
 
     private void OnTriggerEnter(Collider collider)
     {
@@ -20,6 +30,7 @@ public class EndGame : MonoBehaviour {
     private void End()
     {
         winCanvas.SetActive(true);
+        source.PlayOneShot(audioClipWin, 0.5f);
         Time.timeScale = 0;
         FindObjectOfType<ButtonManager>().pauseAvailable = false;
     }
@@ -27,6 +38,7 @@ public class EndGame : MonoBehaviour {
     public void Dead()
     {
         deathCanvas.SetActive(true);
+        source.PlayOneShot(audioClipDeath, 0.5f);
         FindObjectOfType<ButtonManager>().pauseAvailable = false;
     }
 }

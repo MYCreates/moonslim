@@ -29,17 +29,21 @@ public class ButtonManager : MonoBehaviour {
 
     public void ChangeScene(string scene)
     {
-        switch (checkpoint) {
-            case 1 :
-                // TODO : change to new scene
-                Debug.Log("Squalala");
-                SceneManager.LoadScene(scene + "_check1");
-                break;
-            case 0:
-            default:
-                SceneManager.LoadScene(scene);
-                break;
-        } 
+        if (scene == "Level")
+        {
+            switch (checkpoint)
+            {
+                case 1:
+                    // TODO : change to new scene
+                    SceneManager.LoadScene(scene + "_check1");
+                    break;
+                case 0:
+                default:
+                    SceneManager.LoadScene(scene);
+                    break;
+            }
+        }
+        SceneManager.LoadScene(scene);
     }
 
     public void QuitGame()
