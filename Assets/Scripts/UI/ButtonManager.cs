@@ -9,6 +9,7 @@ public class ButtonManager : MonoBehaviour {
     private bool pause = false;
     public bool pauseAvailable;
 
+    [SerializeField]
     public int checkpoint = 0;
 
     private void Start()
@@ -31,7 +32,8 @@ public class ButtonManager : MonoBehaviour {
         switch (checkpoint) {
             case 1 :
                 // TODO : change to new scene
-                SceneManager.LoadScene(scene);
+                Debug.Log("Squalala");
+                SceneManager.LoadScene(scene + "_check1");
                 break;
             case 0:
             default:

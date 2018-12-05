@@ -17,6 +17,7 @@ public class Checkpoint : MonoBehaviour {
 
     void OnTriggerEnter( Collider col)
     {
+        Debug.Log("Triggered");
         buttonManager.checkpoint = checkpointNumber;
     }
     
