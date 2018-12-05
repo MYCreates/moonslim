@@ -181,7 +181,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioClip: {fileID: 8300000, guid: 97b404be66fc6244bb817e5a4529060e, type: 3}
-  speedBoost: 2
+  speedBoost: 1.5
   boostTime: 3
 --- !u!212 &212617533695535974
 SpriteRenderer:
