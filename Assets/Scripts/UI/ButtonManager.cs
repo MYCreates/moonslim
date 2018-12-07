@@ -10,6 +10,9 @@ public class ButtonManager : MonoBehaviour {
     public bool pauseAvailable;
 
     [SerializeField]
+    private GameObject credits;
+
+    [SerializeField]
     public int checkpoint = 0;
 
     private void Start()
@@ -66,5 +69,14 @@ public class ButtonManager : MonoBehaviour {
         Time.timeScale = 1;
         pause = false;
         pauseMenu.SetActive(false);
+    }
+
+    public void OpenCredits()
+    {
+        credits.SetActive(true);
+    }
+    public void CloseCredits()
+    {
+        credits.SetActive(false);
     }
 }
