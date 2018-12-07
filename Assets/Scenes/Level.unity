@@ -7355,6 +7355,10 @@ Prefab:
       propertyPath: m_LocalScale.y
       value: 0.8
       objectReference: {fileID: 0}
+    - target: {fileID: 1051158257827220, guid: 70019287c8d3b434e949cb0f00bf135f, type: 2}
+      propertyPath: m_Name
+      value: Eleana
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 70019287c8d3b434e949cb0f00bf135f, type: 2}
   m_IsPrefabAsset: 0
@@ -10521,6 +10525,10 @@ Prefab:
     - target: {fileID: 4711473213189150, guid: dad65517ac2c2134cbce1dc8103b6199, type: 2}
       propertyPath: m_RootOrder
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1619271079601308, guid: dad65517ac2c2134cbce1dc8103b6199, type: 2}
+      propertyPath: m_Name
+      value: Llona
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dad65517ac2c2134cbce1dc8103b6199, type: 2}
